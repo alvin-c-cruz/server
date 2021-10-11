@@ -10,7 +10,7 @@ def get_db():
 		detect_types=sqlite3.PARSE_DECLTYPES
 		)
 	db.row_factory =sqlite3.Row
-	print(type(db))
+
 	return db
 
 

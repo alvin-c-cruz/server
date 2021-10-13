@@ -7,4 +7,5 @@ bp = Blueprint('account', __name__, template_folder='pages', url_prefix='/accoun
 
 @bp.route('/')
 def Home():
-	return "Account Home Page"
+	accounts = []
+	return render_template('account/home.html', accounts=accounts)

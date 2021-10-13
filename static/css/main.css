@@ -1,0 +1,160 @@
+/* Defaults */
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+/* Flex */
+
+.flex, .flex-row {
+    display: flex;
+}
+
+.flex-column {
+    /* The column value stacks the flex items vertically (from top to bottom) */
+    display: flex;
+    flex-direction: column;
+}  
+
+.justify-left {
+    justify-content: flex-start;
+}
+
+.justify-right {
+    justify-content: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-space-between {
+    justify-content: space-between;
+}
+
+.justify-space-around {
+    justify-content: space-around;
+}
+
+.justify-space-evenly {
+    justify-content: space-evenly;
+}
+
+.align-items-top {
+    align-items: flex-start;
+}
+
+.align-items-bottom {
+    align-items: flex-end;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.align-items-stretch {
+    align-items: stretch;
+}
+
+.align-items-baseline {
+    align-items: baseline;
+}
+
+.align-left {
+    margin-right: auto;
+}
+
+.align-right {
+    margin-left: auto;
+}
+
+.flex-1 {
+    flex-grow: 1;
+}
+
+.flex-2 {
+    flex-grow: 2;
+}
+
+.flex-3 {
+    flex-grow: 3;
+}
+
+.flex-4 {
+    flex-grow: 4;
+}
+
+
+/* Borders */
+.bordered {
+    border: 1px solid rgb(70, 2, 70);
+}
+
+.bordered-thick {
+    border: 4px solid rgb(70, 2, 70);
+}
+
+.bordered-thick-top {
+    border-top: 4px solid rgb(70, 2, 70);
+}
+
+.bordered-thick-bottom {
+    border-bottom: 4px solid rgb(70, 2, 70);
+}
+
+.bordered-thick-right {
+    border-right: 4px solid rgb(70, 2, 70);
+}
+
+.bordered-thick-left {
+    border-left: 4px solid rgb(70, 2, 70);
+}
+
+
+
+/* Button */
+.nav-bar {
+    background-color: #4CAF50; /* Green */
+}
+
+.nav-button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 20px;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+.nav-button:hover {
+    background-color: lightgreen;
+}
+
+.button {
+    background-color: purple;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+.button:hover {
+    background-color: rgb(192, 92, 192);
+}
+
+.padding-20 {
+    padding: 20px;
+}
+
+/* Height */
+.height-50 {
+    height: 50px;
+}

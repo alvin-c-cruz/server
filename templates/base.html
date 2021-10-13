@@ -5,8 +5,14 @@
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css')}}">
 </head>
 <body>
-	{% include 'navbar.html' %}
-	{% block content %}
-	{% endblock %}
+	<div class="flex-column">
+		<header class="flex-column">
+			{% include 'navbar.html' %}
+		</header>
+		<main class="flex-column">
+			{% block content %}
+			{% endblock %}		
+		</main>
+	</div>
 </body>
 </html>

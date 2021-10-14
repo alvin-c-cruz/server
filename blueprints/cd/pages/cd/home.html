@@ -23,10 +23,10 @@
             {% for cd in cds %}
         <tr class="height-50">
             <td class="bordered-thick">
-                {{cd['cd_number']}}
+                {{cd['cd_num']}}
             </td> 
             <td class="bordered-thick">
-                {{cd['cd_title']}}
+                {{cd['vendor_name']}}
             </td>
             <td class="bordered-thick">
                 <a href="{{url_for('cd.Edit', cd_id=cd['id'])}}">Edit</a>
@@ -36,7 +36,7 @@
             {% endfor %}
         {% else %}
         <tr class="height-50">
-            <td colspan="2" class="bordered-thick">No record found.</td>
+            <td colspan="3" class="bordered-thick text-center">No record found.</td>
         </tr>
         {% endif %}
     </table>

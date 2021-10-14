@@ -31,9 +31,11 @@ def init_db():
 
 	from ..account import Account
 	from ..vendor import Vendor
+	from ..cd import CD
 
 	Account(db=db).init_db
 	Vendor(db=db).init_db
+	CD(db=db).init_db
 
 
 @click.command('init-db')

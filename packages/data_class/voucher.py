@@ -15,7 +15,7 @@ class Voucher:
 
 	def __post_init__(self):
 		class_name = str(self.__class__)
-		loc = class_name.find('.') + 1
+		loc = class_name.rfind('.') + 1
 		length = len(class_name) - 2
 		self.class_name = class_name[loc: length].lower()
 
@@ -65,7 +65,8 @@ class Voucher:
 			f'DROP TABLE IF EXISTS {self.table_name};',
 			f'DROP TABLE IF EXISTS {self.entry_table_name};',
 			]
-		for sql in commands: self.db.execute(sql)
+		for sql in commands: 
+			self.db.execute(sql)
 
 		return f"{self.table_name} and {self.entry_table_name} has been deleted."
 	
@@ -213,3 +214,11 @@ class Voucher:
 				debit=row['debit'],
 				credit=row['credit']
 				)
+	
+
+	def all(self, **filter):
+		if filter:
+			clause = [f'{key}=?' for key in filter]
+			return self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchall()
+		else:
+			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchall()

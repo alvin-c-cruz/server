@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex">
+        <h1>Cash Disbursements</h1>
+        <a href="{{url_for('cd.Add')}}" class="button align-right">New Voucher</a>
+    </div>
+
+    <table class="bordered-thick">
+        <tr class="height-50">
+            <th class="bordered-thick">
+                CD No.
+            </th> 
+            <th class="bordered-thick">
+                Vendor
+            </th>
+            <th class="bordered-thick">
+                Actions
+            </th>
+        </tr>
+
+        {% if cds %}
+            {% for cd in cds %}
+        <tr class="height-50">
+            <td class="bordered-thick">
+                {{cd['cd_number']}}
+            </td> 
+            <td class="bordered-thick">
+                {{cd['cd_title']}}
+            </td>
+            <td class="bordered-thick">
+                <a href="{{url_for('cd.Edit', cd_id=cd['id'])}}">Edit</a>
+                <a href="{{url_for('cd.Delete', cd_id=cd['id'])}}" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+            </td>
+        </tr>
+            {% endfor %}
+        {% else %}
+        <tr class="height-50">
+            <td colspan="2" class="bordered-thick">No record found.</td>
+        </tr>
+        {% endif %}
+    </table>
+
+{% endblock %}

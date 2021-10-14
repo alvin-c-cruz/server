@@ -2,35 +2,35 @@
 
 {% block content %}
     <div class="flex">
-        <h1>Chart of Accounts</h1>
-        <a href="{{url_for('account.Add')}}" class="button align-right">New Account</a>
+        <h1>Vendor List</h1>
+        <a href="{{url_for('vendor.Add')}}" class="button align-right">New Vendor</a>
     </div>
 
     <table class="bordered-thick">
         <tr class="height-50">
             <th class="bordered-thick">
-                Account Number
+                Vendor Name
             </th> 
             <th class="bordered-thick">
-                Account Title
+                Tax Identification Number
             </th>
             <th class="bordered-thick">
                 Actions
             </th>
         </tr>
 
-        {% if accounts %}
-            {% for account in accounts %}
+        {% if vendors %}
+            {% for vendor in vendors %}
         <tr class="height-50">
             <td class="bordered-thick">
-                {{account['account_number']}}
+                {{vendor['vendor_name']}}
             </td> 
             <td class="bordered-thick">
-                {{account['account_title']}}
+                {{vendor['tin']}}
             </td>
             <td class="bordered-thick">
-                <a href="{{url_for('account.Edit', account_id=account['id'])}}">Edit</a>
-                <a href="{{url_for('account.Delete', account_id=account['id'])}}" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('vendor.Edit', vendor_id=vendor['id'])}}">Edit</a>
+                <a href="{{url_for('vendor.Delete', vendor_id=vendor['id'])}}" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
             </td>
         </tr>
             {% endfor %}

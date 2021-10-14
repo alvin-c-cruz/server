@@ -176,3 +176,9 @@ body {
 .font-16 {
     font-size: 16px;
 }
+
+
+/* Text Align */
+.text-center {
+    text-align: center;
+}

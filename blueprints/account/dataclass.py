@@ -5,5 +5,3 @@ from ... packages import SimpleEntry
 class Account(SimpleEntry):
     account_number: str = None
     account_title: str = None
-
-    # table_name:str = "tbl_account"

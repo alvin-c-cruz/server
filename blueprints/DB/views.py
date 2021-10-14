@@ -30,8 +30,10 @@ def init_db():
 	db = get_db()
 
 	from ..account import Account
+	from ..vendor import Vendor
 
-	Account(db).init_db
+	Account(db=db).init_db
+	Vendor(db=db).init_db
 
 
 @click.command('init-db')

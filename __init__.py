@@ -1,6 +1,8 @@
 from flask import Flask
 import os
 import secrets
+
+from server.blueprints import vendor
 from . import blueprints
 
 def create_app(test_mode=False):
@@ -28,6 +30,8 @@ def create_app(test_mode=False):
 		blueprints.auth,
 		blueprints.DB,
 		blueprints.account,
+		blueprints.vendor,
+		blueprints.cd,
 	]
 	for view in views:
 		app.register_blueprint(view.bp)

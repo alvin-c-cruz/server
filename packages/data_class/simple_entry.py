@@ -12,7 +12,7 @@ class SimpleEntry:
 
 	def __post_init__(self):
 		class_name = str(self.__class__)
-		loc = class_name.find('.') + 1
+		loc = class_name.rfind('.') + 1
 		length = len(class_name) - 2
 		self.class_name = class_name[loc: length].lower()
 
@@ -126,3 +126,11 @@ class SimpleEntry:
 		for field in self.fields():
 			if field['name'] != 'id':
 				setattr(self, field['name'], parent[field['name']])
+
+
+	def all(self, **filter):
+		if filter:
+			clause = [f'{key}=?' for key in filter]
+			return self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchall()
+		else:
+			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchone()

@@ -1,1 +1,1 @@
-from . data_class import Voucher
+from . data_class import Voucher, SimpleEntry

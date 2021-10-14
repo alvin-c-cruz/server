@@ -1,41 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Chart of Accounts</h1>
-    <a href="#" class="button">New Account</a>
-    <div class="flex-column bordered-thick">
-        <div class="flex justify-center height-50">
-            <strong class="flex flex-2 align-items-center justify-center bordered-thick-right">
+    <div class="flex">
+        <h1>Chart of Accounts</h1>
+        <a href="{{url_for('account.Add')}}" class="button align-right">New Account</a>
+    </div>
+
+    <table class="flex-column bordered-thick">
+        <tr class="flex justify-center height-50">
+            <th class="flex flex-2 align-items-center justify-center bordered-thick-right">
                 Account Number
-            </strong> 
-            <strong class="flex flex-3 align-items-center justify-center bordered-thick-right">
+            </th> 
+            <th class="flex flex-3 align-items-center justify-center bordered-thick-right">
                 Account Title
-            </strong>
-            <strong class="flex flex-1 align-items-center justify-center">
+            </th>
+            <th class="flex flex-1 align-items-center justify-center">
                 Actions
-            </strong>
-        </div>
+            </th>
+        </tr>
 
         {% if accounts %}
             {% for account in accounts %}
-        <div class="flex justify-center height-50">
-            <strong class="flex flex-2 align-items-center justify-center bordered-thick-top bordered-thick-right">
+        <tr class="flex justify-center height-50">
+            <td class="flex flex-2 align-items-center justify-center bordered-thick-top bordered-thick-right">
                 {{account.account_number}}
-            </strong> 
-            <strong class="flex flex-3 align-items-center justify-center bordered-thick-top bordered-thick-right">
+            </td> 
+            <td class="flex flex-3 align-items-center justify-center bordered-thick-top bordered-thick-right">
                 {{account.account_title}}
-            </strong>
-            <strong class="flex flex-1 align-items-center justify-center bordered-thick-top">
+            </td>
+            <td class="flex flex-1 align-items-center justify-center bordered-thick-top">
                 <a href="#">Edit</a>
                 <a href="#">Delete</a>
-            </strong>
-        </div>
+            </td>
+        </tr>
             {% endfor %}
         {% else %}
-        <div class="flex align-items-center justify-center bordered-thick-top height-50">
-            No record found.
-        </div>
+        <tr class="flex align-items-center justify-center bordered-thick-top height-50">
+            <td>No record found.</td>
+        </tr>
         {% endif %}
-    </div>
+    </table>
 
 {% endblock %}

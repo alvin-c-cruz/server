@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>New Account</h1>
+
+    <form action="" class="flex-column">
+        {{csrf_token}}
+        <table>
+            <tr>
+                <td>
+                    Account Number
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Account Title
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16">
+                </td>
+            </tr>
+        </table>
+        <div class="flex flex-1 justify-center height-50">
+            <input type="submit" class="button" value="Save">
+        </div>
+</form>
+
+
+{% endblock %}

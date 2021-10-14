@@ -133,4 +133,4 @@ class SimpleEntry:
 			clause = [f'{key}=?' for key in filter]
 			return self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchall()
 		else:
-			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchone()
+			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchall()

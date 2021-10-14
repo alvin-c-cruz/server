@@ -3,7 +3,7 @@
 {% block content %}
     <h1>New Account</h1>
 
-    <form action="" class="flex-column">
+    <form method="post" action="{{url_for('account.Add')}}" class="flex-column">
         {{csrf_token}}
         <table>
             <tr>
@@ -11,7 +11,7 @@
                     Account Number
                 </td> 
                 <td class="flex height-50">
-                    <input type="text" class="flex-1 align-items-stretch font-16">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="account_number" value="{{form['account_number']}}">
                 </td>
             </tr>
             <tr>
@@ -19,12 +19,13 @@
                     Account Title
                 </td> 
                 <td class="flex height-50">
-                    <input type="text" class="flex-1 align-items-stretch font-16">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="account_title" value="{{form['account_title']}}">
                 </td>
             </tr>
         </table>
-        <div class="flex flex-1 justify-center height-50">
-            <input type="submit" class="button" value="Save">
+        <div class="flex flex-1 justify-center gap-20 height-50">
+            <input type="submit" class="button width-125" value="Save" name="cmd_button">
+            <input type="submit" class="button width-125" value="Save and New" name="cmd_button">
         </div>
 </form>
 

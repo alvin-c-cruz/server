@@ -1,6 +1,11 @@
 from flask import Blueprint, session, g, render_template, redirect, url_for, flash
 from flask import current_app
+
 import sqlite3
+import click
+from flask.cli import with_appcontext
+
+from .. auth import login_required
 
 bp = Blueprint('db', __name__, template_folder='pages')
 
@@ -14,6 +19,34 @@ def get_db():
 	return db
 
 
+def close_db(e=None):
+	db = g.pop('db', None)
+
+	if db is not None:
+		db.close()
+
+
+def init_db():
+	db = get_db()
+
+	from ..account import Account
+
+	Account(db).init_db
+
+
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+	init_db()
+	click.echo('Database has been initialized.')
+
+
+def init_app(app):
+	app.teardown_appcontext(close_db)
+	app.cli.add_command(init_db_command)
+
+
 @bp.route('/')
+@login_required
 def Home():
 	return render_template('db/home.html')

@@ -32,4 +32,6 @@ def create_app(test_mode=False):
 	for view in views:
 		app.register_blueprint(view.bp)
 
+	blueprints.DB.init_app(app)
+
 	return app

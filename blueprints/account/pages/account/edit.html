@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Edit Account</h1>
+
+    <form method="post" action="{{url_for('account.Edit', account_id=account_id)}}" class="flex-column">
+        {{csrf_token}}
+        <table>
+            <tr>
+                <td>
+                    Account Number
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="account_number" value="{{account['account_number']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Account Title
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="account_title" value="{{account['account_title']}}">
+                </td>
+            </tr>
+        </table>
+        <div class="flex flex-1 justify-center gap-20 height-50">
+            <input type="submit" class="button width-125" value="Update" name="cmd_button">
+        </div>
+</form>
+
+
+{% endblock %}

@@ -16,10 +16,14 @@ def Home():
     return render_template('cd/home.html', cds=cds)
 
 
-@bp.route('/add')
+@bp.route('/add', methods=['POST', 'GET'])
 @login_required
 def Add():
-    return "Add CD"
+	form = {
+			'entry': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+			}
+	vendors = []
+	return render_template('cd/add.html', form=form, vendors=vendors)
 
 
 @bp.route('/edit')

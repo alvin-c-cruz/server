@@ -27,7 +27,8 @@ class Voucher:
 	@dataclass
 	class Entry:
 		id: int = None
-		account_id: int = None
+		i: int = 0 # Not to be saved in database
+		account_id: int = 0
 		debit: float = 0.00
 		credit: float = 0.00
 
@@ -108,7 +109,7 @@ class Voucher:
 		debit = kwargs.get('debit')
 		credit = kwargs.get('credit')
 
-		if not account_id: return False
+		if not account_id: account_id = 0
 		if not debit: debit = 0.0
 		if not credit: credit = 0.0
 
@@ -116,6 +117,9 @@ class Voucher:
 			self.entry.append(self.Entry(id=id, account_id=account_id, debit=debit, credit=credit))
 		else:
 			self.entry.append(self.Entry(account_id=account_id, debit=debit, credit=credit))
+
+		for i in range(0, len(self.entry)):
+			self.entry[i].i = i + 1
 
 		return True
 
@@ -222,3 +226,6 @@ class Voucher:
 			return self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchall()
 		else:
 			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchall()
+
+
+

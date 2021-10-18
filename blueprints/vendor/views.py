@@ -30,10 +30,10 @@ def Add():
 			db = get_db()
 			vendor = Vendor(
 				db=db, 
-				vendor_name=form['vendor_name'], 
+				name=form['name'], 
 				tin=form['tin']
 				).save()
-			flash(f"{form['vendor_name']} has been saved.")
+			flash(f"{form['name']} has been saved.")
 
 			if form['cmd_button'] == 'Save':
 				return redirect(url_for('vendor.Home'))
@@ -58,14 +58,14 @@ def Edit(vendor_id):
 		error = Validate(form, vendor_id)
 
 		vendor.id = vendor_id
-		vendor.vendor_name = form['vendor_name']
+		vendor.name = form['name']
 		vendor.tin = form['tin']
 
 		if error:
 			flash(error)
 		else:
 			vendor.save()
-			flash(f"{form['vendor_name']} has been saved.")
+			flash(f"{form['name']} has been saved.")
 
 			return redirect(url_for('vendor.Home'))
 		
@@ -77,18 +77,18 @@ def Edit(vendor_id):
 
 
 def Validate(form, vendor_id=None):
-	vendor_name = form.get('vendor_name')
+	name = form.get('name')
 
-	if not vendor_name: 
+	if not name: 
 		return "Vendor name is required."
 	
 	db = get_db()
 	if vendor_id:
-		if db.execute("SELECT COUNT(*) FROM tbl_vendor WHERE vendor_name=? AND id!=?;", (vendor_name, vendor_id)).fetchone()[0]:
+		if db.execute("SELECT COUNT(*) FROM tbl_vendor WHERE name=? AND id!=?;", (name, vendor_id)).fetchone()[0]:
 			return "Vendor Name is already in use."
 
 	else:
-		if db.execute("SELECT COUNT(*) FROM tbl_vendor WHERE vendor_name=?;", (vendor_name, )).fetchone()[0]:
+		if db.execute("SELECT COUNT(*) FROM tbl_vendor WHERE name=?;", (name, )).fetchone()[0]:
 			return "Vendor Name is already in use."
 
 
@@ -99,16 +99,11 @@ def Delete(vendor_id):
 	vendor = Vendor(db=db)
 	vendor.get(vendor_id)
 
-	def is_related():
-		if False:
-			return True
-		else:
-			return False
+	error = vendor.delete()
 
-	if not is_related():
-		vendor.delete()
-		flash(f"{vendor.vendor_name} has been deleted.")
+	if error:
+		flash(f"{vendor.name} has related record(s) and cannot be deleted.")
 	else:
-		flash(f"{vendor.vendor_name} has related record(s) and cannot be deleted.")
+		flash(f"{vendor.name} has been deleted.")
 
 	return redirect(url_for('vendor.Home'))

@@ -16,7 +16,7 @@
 		<footer class="flex-column">
 			{% with messages=get_flashed_messages() %}
 				{% for message in messages %}
-				<p>{{message}}</p>
+				<p class="font-red">{{message}}</p>
 				{% endfor %}
 			{% endwith %}
 		</footer>

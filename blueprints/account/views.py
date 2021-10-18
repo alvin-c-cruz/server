@@ -31,9 +31,9 @@ def Add():
 			account = Account(
 				db=db, 
 				account_number=form['account_number'], 
-				account_title=form['account_title']
+				name=form['name']
 				).save()
-			flash(f"{form['account_number']}: {form['account_title']} has been saved.")
+			flash(f"{form['account_number']}: {form['name']} has been saved.")
 
 			if form['cmd_button'] == 'Save':
 				return redirect(url_for('account.Home'))
@@ -59,13 +59,13 @@ def Edit(account_id):
 
 		account.id = account_id
 		account.account_number = form['account_number']
-		account.account_title = form['account_title']
+		account.name = form['name']
 
 		if error:
 			flash(error)
 		else:
 			account.save()
-			flash(f"{form['account_number']}: {form['account_title']} has been saved.")
+			flash(f"{form['account_number']}: {form['name']} has been saved.")
 
 			return redirect(url_for('account.Home'))
 		
@@ -78,12 +78,12 @@ def Edit(account_id):
 
 def Validate(form, account_id=None):
 	account_number = form.get('account_number')
-	account_title =form.get('account_title')
+	name =form.get('name')
 
 	if not account_number: 
 		return "Account Number is required."
 	
-	if not account_title: 
+	if not name: 
 		return "Account Title is required."
 
 	db = get_db()
@@ -91,13 +91,13 @@ def Validate(form, account_id=None):
 		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE account_number=? AND id!=?;", (account_number, account_id)).fetchone()[0]:
 			return "Account Number is already in use."
 
-		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE account_title=? AND id!=?;", (account_title, account_id)).fetchone()[0]:
+		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE name=? AND id!=?;", (name, account_id)).fetchone()[0]:
 			return "Account Title is already in use."
 	else:
 		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE account_number=?;", (account_number, )).fetchone()[0]:
 			return "Account Number is already in use."
 
-		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE account_title=?;", (account_title, )).fetchone()[0]:
+		if db.execute("SELECT COUNT(*) FROM tbl_account WHERE name=?;", (name, )).fetchone()[0]:
 			return "Account Title is already in use."
 
 
@@ -109,16 +109,11 @@ def Delete(account_id):
 	account = Account(db=db)
 	account.get(account_id)
 
-	def is_related():
-		if False:
-			return True
-		else:
-			return False
+	error = account.delete()
 
-	if not is_related():
-		account.delete()
-		flash(f"{account.account_title} has been deleted.")
+	if error:
+		flash(f"{account.name} has related record(s) and cannot be deleted.")
 	else:
-		flash(f"{account.account_title} has related record(s) and cannot be deleted.")
+		flash(f"{account.name} has been deleted.")
 
 	return redirect(url_for('account.Home'))

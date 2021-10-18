@@ -2,9 +2,9 @@
 {% from 'macros.html' import select_field, amount %}
 
 {% block content %}
-    <h1>New Disbursement</h1>
+    <h1>Edit Disbursement</h1>
 
-    <form method="post" action="{{url_for('cd.Add')}}" class="flex-column">
+    <form method="post" action="{{url_for('cd.Edit', cd_id=form['id'])}}" class="flex-column">
         {{csrf_token}}
         <table>
             <tr>
@@ -57,6 +57,7 @@
         </table>
 
         <div class="flex flex-1 justify-center gap-20 height-50">
+            <input type="submit" class="button width-125" value="Print" name="cmd_button" formtarget=”_blank”>
             <input type="submit" class="button width-125" value="Save" name="cmd_button">
             <input type="submit" class="button width-125" value="Save and New" name="cmd_button">
             <input type="submit" class="button width-125" value="Back" name="cmd_button">

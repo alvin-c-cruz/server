@@ -89,12 +89,15 @@ class SimpleEntry:
 		
 
 	def delete(self):
-		commands = [
-			f'DELETE FROM {self.table_name} WHERE id={self.id};',
-		]
+		if self.is_related():
+			return f"{self.name} has related information and cannot be deleted."
+		else:
+			commands = [
+				f'DELETE FROM {self.table_name} WHERE id={self.id};',
+			]
 
-		for sql in commands: self.db.execute(sql)
-		self.db.commit()
+			for sql in commands: self.db.execute(sql)
+			self.db.commit()
 
 
 	def save(self):
@@ -134,3 +137,7 @@ class SimpleEntry:
 			return self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchall()
 		else:
 			return self.db.execute(f'SELECT * FROM {self.table_name};').fetchall()
+
+
+	def is_related(self):
+		return False

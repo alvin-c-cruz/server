@@ -177,6 +177,10 @@ body {
     font-size: 16px;
 }
 
+.font-red {
+    color: red;
+}
+
 
 /* Text Align */
 .text-center {

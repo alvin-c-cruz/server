@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Print Preview: CD No. {{cd.cd_num}}</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cd.css')}}">
+    </head>
+    <body>
+        <div class="voucher">
+            <div class="header">
+                <div class="row">
+                    <div class="column">
+                        <h1>Philgen Company Name</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label>Date </label>
+                        <span>{{cd.record_date}}</span>
+                    </div>
+                    <div class="column">
+                        <label>CD No. </label>
+                        <span>{{cd.cd_num}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label>Pay to the order of </label>
+                        <span>{{cd.vendor_name}}</span>
+                    </div>                
+                </div>    
+            </div>
+            <div class="description">
+                <p>{{cd.description}}</p>
+            </div>
+            <div class="footer">
+                <div class="entry">
+                    <table>
+                        <tr>
+                            <th>Account Title</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                        {% for entry in cd.entry %}
+                        <tr>
+                            <td>{{entry.account_title}}</td>
+                            <td>{% if entry.debit %}{{entry.debit}}{% endif %}</td>
+                            <td>{% if entry.credit %}{{entry.credit}}{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="amount_in_words">
+                    <p>Amount in words here</p>
+                </div>
+                <div class="signatories">
+                    <p>LTV</p>
+                    <p>MV</p>
+                    <p>The another</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

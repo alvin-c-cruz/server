@@ -10,6 +10,11 @@ class CD(Voucher):
     vendor_id: int = 0
     description: str = ""
 
+    @property
+    def vendor_name(self):
+    	return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]	
+		
+
     def all(self, **filter):
     	if filter:
     		clause = [f'{key}=?' for key in filter]
@@ -50,8 +55,6 @@ class CD(Voucher):
 
 
         return True
-
-
 
 
 	# def all(self, **filter):

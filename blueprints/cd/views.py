@@ -117,6 +117,8 @@ def Print(cd_id):
 	db = get_db()
 	cd = CD(db=db)
 	cd.get(cd_id)
+	for entry in cd.entry:
+		entry.account_title = db.execute('SELECT name FROM tbl_account WHERE id=?', (entry.account_id, )).fetchone()[0] if entry.account_id != 0 else ""
 
-	return "Printing Voucher"
+	return render_template('cd/print.html', cd=cd)
 

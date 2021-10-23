@@ -8,6 +8,7 @@ class CD(Voucher):
     cd_num: str = ""
     record_date: str = str(date.today())
     vendor_id: int = 0
+    check_number: str = ""
     description: str = ""
 
     @property
@@ -23,6 +24,7 @@ class CD(Voucher):
     				tbl_cd.id,
     				tbl_cd.record_date,
     				tbl_vendor.name as vendor_name,
+                    tbl_cd.check_number,
     				tbl_cd.description
     			FROM tbl_cd
     			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_cd.vendor_id
@@ -34,7 +36,8 @@ class CD(Voucher):
     			SELECT 
     				tbl_cd.id,
     				tbl_cd.cd_num,
-    				tbl_cd.record_date,
+                    tbl_cd.record_date,
+                    tbl_cd.check_number,
     				tbl_vendor.name as vendor_name,
     				tbl_cd.description
     			FROM tbl_cd

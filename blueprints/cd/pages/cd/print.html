@@ -1,62 +1,121 @@
 <html>
-    <head>
-        <title>Print Preview: CD No. {{cd.cd_num}}</title>
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cd.css')}}">
-    </head>
-    <body>
-        <div class="voucher">
-            <div class="header">
-                <div class="row">
-                    <div class="column">
-                        <h1>Philgen Company Name</h1>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label>Date </label>
-                        <span>{{cd.record_date}}</span>
-                    </div>
-                    <div class="column">
-                        <label>CD No. </label>
-                        <span>{{cd.cd_num}}</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label>Pay to the order of </label>
-                        <span>{{cd.vendor_name}}</span>
-                    </div>                
-                </div>    
-            </div>
-            <div class="description">
-                <p>{{cd.description}}</p>
-            </div>
-            <div class="footer">
-                <div class="entry">
-                    <table>
-                        <tr>
-                            <th>Account Title</th>
-                            <th>Debit</th>
-                            <th>Credit</th>
-                        </tr>
-                        {% for entry in cd.entry %}
-                        <tr>
-                            <td>{{entry.account_title}}</td>
-                            <td>{% if entry.debit %}{{entry.debit}}{% endif %}</td>
-                            <td>{% if entry.credit %}{{entry.credit}}{% endif %}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <div class="amount_in_words">
-                    <p>Amount in words here</p>
-                </div>
-                <div class="signatories">
-                    <p>LTV</p>
-                    <p>MV</p>
-                    <p>The another</p>
+<head>
+    <title>Print Preview: CD No. {{cd.cd_num}}</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cd.css')}}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="flex-row justify-center">
+            <h3>PHILGEN COMPANY NAME</h3>    
+        </div>
+
+        <div class="flex-row justify-center">
+            <div class="flex-1"></div>
+            <div class="flex-row flex-1 justify-center">
+                <h4><u>CASH VOUCHER</u></h4>
+            </div>            
+            <div class="flex-row flex-1 justify-end align-right">
+                <div class="flex-row justify-end align-center">
+                    <label>No.</label>
+                    <span><strong class="font-red">{{cd.cd_num}}</strong></span>                    
                 </div>
             </div>
         </div>
-    </body>
+        
+        <div class="flex-row justify-center">
+            <div class="flex-row flex-1">
+                <div class="flex-row flex-1 align-center">
+                    <label>PAID TO: </label>                     
+                </div>
+                <div class="flex-row flex-3 align-center border-bottom">
+                    <span>{{cd.vendor_name}}</span>                       
+                </div>
+            </div>
+            <div class="flex-row flex-1">
+                <div class="flex-row flex-1 justify-end">
+                    <label>DATE: </label>                    
+                </div>
+                <div class="flex-row flex-1 justify-center border-bottom">
+                    <span>{{cd.record_date}}</span>                    
+                </div>
+            </div>             
+        </div>
+        
+        <div class="flex-row">
+            <div class="flex-1">
+                
+            </div>
+            <div class="flex-row flex-1">
+                <div class="flex-row flex-1 justify-end">
+                    <label>CHECK NO.: </label>                   
+                </div>
+                <div class="flex-row flex-1 justify-center border-bottom">
+                    <span>{{cd.check_number}}</span>                    
+                </div>
+            </div>             
+        </div>
+    </header>
+    <main class="flex-column justify-center bordered margin-top-10">  
+        <div class="flex-row justify-center">
+            <label class="flex-row flex-4 justify-center height-15 line-bordered border-bottom"><strong>ACCOUNT TITLE</strong></label>
+            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>DEBIT</strong></label>
+            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>CREDIT</strong></label>            
+        </div>
+
+        {% for entry in cd.entry %}
+        <div class="flex-row justify-center">
+            {% if entry.debit %}
+            <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-10">{{entry.account_title}}</span></label>
+            {% else %}
+            <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-50">{{entry.account_title}}</span></label>
+            {% endif %}
+            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.debit %}{{entry.debit}}{% endif %}</span></label>
+            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.credit %}{{entry.credit}}{% endif %}</span></label>     
+        </div>
+        {% endfor %}                    
+    </main>
+
+    <footer class="flex-column">
+        <div class="flex-column flex-1 align-start line-bordered border-bottom">
+            <p class="margin-left-10">P A R T I C U L A R S:</p>
+            <p class="margin-left-50">{{cd.description}}</p>
+        </div>
+        <div class="flex-column">
+            <div class="flex-row justify-center">
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Prepared by:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end">MGV</span>
+                </div>
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Audited by:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end"></span>
+                </div>
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Received by:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end"></span>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="flex-column">
+            <div class="flex-row justify-center">
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Checked by:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end">ATVT</span>
+                </div>
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Approved by:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end">LTV</span>
+                </div>
+                <div class="flex-row flex-1 height-30">
+                    <label class="flex-row flex-1 align-end">Date:</label>
+                    <span class="flex-row flex-2 justify-center border-bottom align-end"></span>
+                    
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
 </html>

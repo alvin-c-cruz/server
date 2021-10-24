@@ -1,1 +1,1 @@
-from .views import bp, get_db, init_app
+from .views import bp, get_db, close_db, init_app

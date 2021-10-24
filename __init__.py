@@ -1,8 +1,7 @@
-from flask import Flask
+from flask import Flask, session, g
 import os
 import secrets
 
-from server.blueprints import vendor
 from . import blueprints
 
 def create_app(test_mode=False):
@@ -37,5 +36,6 @@ def create_app(test_mode=False):
 		app.register_blueprint(view.bp)
 
 	blueprints.DB.init_app(app)
+	blueprints.auth.user_app(app)
 
 	return app

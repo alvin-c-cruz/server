@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import date
+from flask import session
 
 
 @dataclass
@@ -18,7 +19,7 @@ class SimpleEntry:
 
 
 		if not self.table_name: self.table_name = 'tbl_' + self.class_name 
-
+		if not self.table_name == 'tbl_user': user_id:int = None
 
 	@property
 	def init_db(self):
@@ -101,6 +102,7 @@ class SimpleEntry:
 
 
 	def save(self):
+		if not self.table_name == 'tbl_user': self.user_id = session.get('user_id')
 		if self.id:
 			fields = [f'{field["name"]}=?' for field in self.fields()]
 			values = [getattr(self, field['name']) for field in self.fields()]
@@ -129,6 +131,17 @@ class SimpleEntry:
 		for field in self.fields():
 			if field['name'] != 'id':
 				setattr(self, field['name'], parent[field['name']])
+
+
+	def find(self, **filter):
+		clause = [f'{key}=?' for key in filter]
+		record = self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchone()
+
+		self.id = record['id']
+
+		for field in self.fields():
+			if field['name'] != 'id':
+				setattr(self, field['name'], record[field['name']])
 
 
 	def all(self, **filter):

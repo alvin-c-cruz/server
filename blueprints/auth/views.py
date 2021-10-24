@@ -29,6 +29,7 @@ def Login():
 			error = "Invalid password"
 		
 		if error is None:
+			print('Hello World')
 			session.clear()
 			session['user_id'] = user.id
 			return redirect(url_for('home_page.Home'))
@@ -38,10 +39,30 @@ def Login():
 	return render_template('auth/login.html', program_title="Philgen Accounting")
 
 
+@bp.route('/logout')
+def Logout():
+	session.clear()
+	return redirect(url_for('auth.Login'))
+
+
+@bp.before_app_request
+def load_logged_in_user():
+	user_id = session.get('user_id')
+
+	if user_id is None:
+		g.user = None
+	else:
+		from .. DB import get_db
+		from .dataclass import User
+		user = User(get_db())
+		user.get(user_id)
+		g.user = user
+
+
 def login_required(view):
 	@functools.wraps(view)
 	def wrapped_view(**kwargs):
-		if g.get('user_id') is None: return redirect(url_for('auth.Login'))
+		if g.get('user') is None: return redirect(url_for('auth.Login'))
 		return view(**kwargs)
 	return wrapped_view
 
@@ -51,6 +72,7 @@ def add_user():
 	username = input('Username: ')
 	email = input('Email: ')
 	password = input('Password: ')
+	level = int(input('Level: '))
 	
 	from .. DB import get_db
 	from .dataclass import User
@@ -59,7 +81,8 @@ def add_user():
 		db=db,
 		username=username,
 		email=email,
-		password=generate_password_hash(password)
+		password=generate_password_hash(password),
+		level=level
 		)
 	user.save()
 

@@ -1,11 +1,13 @@
 from dataclasses import dataclass, field
 from datetime import date
+from flask import session
 
 
 @dataclass
 class Voucher:
 	db: any = field(repr=False)
 	id: int = None
+	user_id: int = None
 	entry: list = field(default_factory=list)
 	entry_for_deletion: list = field(default_factory=list)
 
@@ -169,6 +171,7 @@ class Voucher:
 
 
 	def save(self):
+		self.user_id = session.get('user_id')
 		if self.id:
 			fields = [f'{field["name"]}=?' for field in self.fields()]
 			values = [getattr(self, field['name']) for field in self.fields()]

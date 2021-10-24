@@ -131,6 +131,17 @@ class SimpleEntry:
 				setattr(self, field['name'], parent[field['name']])
 
 
+	def find(self, **filter):
+		clause = [f'{key}=?' for key in filter]
+		record = self.db.execute(f'SELECT * FROM {self.table_name} WHERE {", ".join(clause)};', tuple(filter.values())).fetchone()
+
+		self.id = record['id']
+
+		for field in self.fields():
+			if field['name'] != 'id':
+				setattr(self, field['name'], record[field['name']])
+
+
 	def all(self, **filter):
 		if filter:
 			clause = [f'{key}=?' for key in filter]

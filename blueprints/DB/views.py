@@ -29,10 +29,12 @@ def close_db(e=None):
 def init_db():
 	db = get_db()
 
+	from ..auth import User
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..cd import CD
 
+	User(db=db).init_db
 	Account(db=db).init_db
 	Vendor(db=db).init_db
 	CD(db=db).init_db

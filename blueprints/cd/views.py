@@ -125,9 +125,21 @@ def Print(cd_id):
 	_year = int(cd.record_date[:4])
 	_month = int(cd.record_date[5:7])
 	_day = int(cd.record_date[-2:])
-	cd.record_date = date(_year, _month, _day)
+	cd.record_date = date(_year, _month, _day).strftime("%B %d, %Y")
 	for entry in cd.entry:
-		entry.account_title = db.execute('SELECT name FROM tbl_account WHERE id=?', (entry.account_id, )).fetchone()[0] if entry.account_id != 0 else ""
+		if entry.account_id != 0:
+			entry.account_title = db.execute(
+					'SELECT name FROM tbl_account WHERE id=?', 
+					(entry.account_id, )
+				).fetchone()[0]
+
+			if entry.debit != 0:
+				entry.debit = '{:,.2f}'.format(entry.debit)
+
+			if entry.credit != 0:
+				entry.credit = '{:,.2f}'.format(entry.credit)
+		else:
+			entry.account_title = ""
 
 	return render_template('cd/print.html', cd=cd)
 

@@ -5,6 +5,8 @@ import sqlite3
 import click
 from flask.cli import with_appcontext
 
+from werkzeug.security import generate_password_hash
+
 from .. auth import login_required
 
 bp = Blueprint('db', __name__, template_folder='pages')

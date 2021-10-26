@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session, g
-from datetime import date
+from datetime import date, timedelta
 
 from .. auth import login_required
 from .. DB import get_db
@@ -13,12 +13,39 @@ MAX_ROW = 15
 bp = Blueprint('cd', __name__, template_folder="pages", url_prefix="/cd")
 
 
-@bp.route('/')
+@bp.route('/', methods=['POST', 'GET'])
 @login_required
 def Home():
-    db = get_db()
-    cds = CD(db=db).all()
-    return render_template('cd/home.html', cds=cds)
+	if request.method == 'POST':
+		date_from = request.form.get('date_from')
+		date_to = request.form.get('date_to')
+	else:
+	    _date = date.today()
+	    date_from = date(_date.year, _date.month, 1)
+	    date_to = date(_date.year, _date.month + 1, 1) - timedelta(days=1)
+
+	db = get_db()
+	cds = []
+
+
+	for cd in CD(db).range(date_from, date_to):
+		id = cd['id']
+		record_date = date(int(cd['record_date'][:4]), int(cd['record_date'][5:7]), int(cd['record_date'][-2:])).strftime("%d-%b-%Y")
+		cd_num = cd['cd_num']
+		vendor_name = cd['vendor_name']
+		check_number = cd['check_number']
+
+		cds.append(
+			{
+				'id': id,
+				'record_date': record_date,
+				'cd_num': cd_num,
+				'vendor_name': vendor_name, 
+				'check_number': check_number
+				}
+			)
+
+	return render_template('cd/home.html', cds=cds, date_from=date_from, date_to=date_to)
 
 
 @bp.route('/add', methods=['POST', 'GET'])

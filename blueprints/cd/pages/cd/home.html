@@ -6,8 +6,22 @@
         <a href="{{url_for('cd.Add')}}" class="button align-right">New Voucher</a>
     </div>
 
+    <form method="post" action="{{url_for('cd.Home')}}">
+        {{csrf_token}}
+        <div class="flex">
+            <label>From</label>
+            <input type="date" name="date_from" value="{{date_from}}">
+            <label>To</label>
+            <input type="date" name="date_to" value="{{date_to}}">
+            <input type="submit" value="Refresh" class="button">
+        </div>        
+    </form>
+
     <table class="bordered-thick">
         <tr class="height-50">
+            <th class="bordered-thick">
+                Date
+            </th> 
             <th class="bordered-thick">
                 CD No.
             </th> 
@@ -26,6 +40,9 @@
             {% for cd in cds %}
         <tr class="height-50">
             <td class="bordered-thick">
+                {{cd['record_date']}}
+            </td> 
+            <td class="bordered-thick">
                 {{cd['cd_num']}}
             </td> 
             <td class="bordered-thick">
@@ -42,7 +59,7 @@
             {% endfor %}
         {% else %}
         <tr class="height-50">
-            <td colspan="4" class="bordered-thick text-center">No record found.</td>
+            <td colspan="5" class="bordered-thick text-center">No record found.</td>
         </tr>
         {% endif %}
     </table>

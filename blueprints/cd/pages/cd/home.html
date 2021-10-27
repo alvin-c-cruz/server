@@ -8,12 +8,13 @@
 
     <form method="post" action="{{url_for('cd.Home')}}">
         {{csrf_token}}
-        <div class="flex">
-            <label>From</label>
+        <div class="flex gap-20">
+            <label class="flex align-items-center">From</label>
             <input type="date" name="date_from" value="{{date_from}}">
-            <label>To</label>
+            <label class="flex align-items-center">To</label>
             <input type="date" name="date_to" value="{{date_to}}">
             <input type="submit" value="Refresh" class="button">
+            <a href="{{url_for('cd.Download', date_from=date_from, date_to=date_to)}}" class="button">Download</a>
         </div>        
     </form>
 

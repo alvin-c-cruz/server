@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session, g
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session, g, send_file
 from datetime import date, timedelta
 
 from .. auth import login_required
@@ -6,7 +6,7 @@ from .. DB import get_db
 from .. vendor import Vendor
 from .. account import Account
 
-from .dataclass import CD
+from .dataclass import CD, Create_File
 
 MAX_ROW = 15
 
@@ -169,4 +169,13 @@ def Print(cd_id):
 			entry.account_title = ""
 
 	return render_template('cd/print.html', cd=cd)
+
+
+@bp.route('/download?<date_from>&<date_to>')
+@login_required
+def Download(date_from, date_to):
+	f = Create_File(date_from=date_from, date_to=date_to)
+	
+	return send_file('{}'.format(f.filename), as_attachment=True, cache_timeout=0)
+
 

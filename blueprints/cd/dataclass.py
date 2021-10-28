@@ -182,8 +182,21 @@ class Create_File:
         wb["Sheet"].title = sheet_name
         ws = wb[sheet_name]
 
-        #  Headers
+        #  Report head
         row_num = 1
+        cell = ws[f'A{row_num}']
+        cell.value = "Philgen Pacific Food Products Corporation"
+
+        row_num += 1
+        cell = ws[f'A{row_num}']
+        cell.value = "Cash Disbursement Journal"
+
+        row_num += 1
+        cell = ws[f'A{row_num}']
+        cell.value = f"From {self.date_from} to {self.date_to}"
+
+        #  Headers
+        row_num += 2
         column_names = list(self.df_cd.columns)
         
         col_num = 1
@@ -195,12 +208,28 @@ class Create_File:
 
 
         #  Details
-        row_num = 2
+        row_num += 1
+        start_row = row_num
+        amount_columns = []
         for key, cd in self.df_cd.iterrows():
             col_num = 1
+            
             for x in cd:
-                cell = ws[f'{get_column_letter(col_num)}{row_num}']
+                col_letter = get_column_letter(col_num)
+                if col_num not in (1, 2, 3, 4, 5): amount_columns.append(col_letter)
+                cell = ws[f'{col_letter}{row_num}']
                 cell.value = x
                 col_num += 1
             
             row_num += 1
+        
+        end_row = row_num
+
+        #  Total
+        row_num += 1
+        cell = ws[f'A{row_num}']
+        cell.value = "TOTAL"
+
+        for col in amount_columns:
+            cell = ws[f'{col}{row_num}']
+            cell.value = f'=SUM({col}{start_row}:{col}{end_row})'

@@ -3,8 +3,11 @@ from datetime import date
 from dataclasses import dataclass
 import os
 import pandas as pd
+
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, Alignment
+from openpyxl.styles.borders import Border, Side
 
 from .. DB import get_db
 from ... packages import Voucher
@@ -95,7 +98,22 @@ class Create_File:
     date_to: str
 
     def __post_init__(self):
-        self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} CD.xlsx")
+        #  Excel formats
+        self.thin_border = Border(
+            left=Side(style='thin'),
+            right=Side(style='thin'),
+            top=Side(style='thin'),
+            bottom=Side(style='thin')
+        )
+
+        self.double_rule = Border(
+            bottom=Side(style='double')
+        )
+
+        #  Downloaded filename
+        self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Cash Disbursement Journal.xlsx")
+        
+        #  Open model        
         db = get_db()
         self.cds = CD(db).range(self.date_from, self.date_to)
 
@@ -117,6 +135,10 @@ class Create_File:
             """
         df_cd = pd.read_sql_query(sql, db)
         df_cd = df_cd.set_index('id')
+
+        for key, row in df_cd.iterrows():
+            row.DATE = self.short_date(row.DATE)
+
 
         #  Collect account titles and add to main dataframe
         sql = f"""SELECT 
@@ -186,23 +208,40 @@ class Create_File:
         row_num = 1
         cell = ws[f'A{row_num}']
         cell.value = "Philgen Pacific Food Products Corporation"
+        cell.font = Font(size=14, bold=True)
 
         row_num += 1
         cell = ws[f'A{row_num}']
         cell.value = "Cash Disbursement Journal"
+        cell.font = Font(size=12, bold=True)
 
         row_num += 1
         cell = ws[f'A{row_num}']
-        cell.value = f"From {self.date_from} to {self.date_to}"
+        cell.value = f"From {self.long_date(self.date_from)} to {self.long_date(self.date_to)}"
+        cell.font = Font(size=12, bold=True)
 
         #  Headers
         row_num += 2
         column_names = list(self.df_cd.columns)
         
+        width = {
+            "A": 11.11,
+            "B": 9.11,
+            "C": 30.0,
+            "D": 9.11,
+            "E": 30.0,
+        }
+            
+
         col_num = 1
         for col_name in column_names:
-            cell = ws[f'{get_column_letter(col_num)}{row_num}']
+            col_letter = get_column_letter(col_num)
+            ws.column_dimensions[col_letter].width = width[col_letter] if col_letter in width else 14
+            cell = ws[f'{col_letter}{row_num}']
             cell.value = col_name
+            cell.font = Font(size=10, bold=True)
+            cell.border = self.thin_border
+            cell.alignment = Alignment(horizontal='center') if col_num < 6 else Alignment(horizontal='center', wrap_text=True)
             col_num += 1
 
 
@@ -216,9 +255,15 @@ class Create_File:
             
             for x in cd:
                 col_letter = get_column_letter(col_num)
-                if col_num not in (1, 2, 3, 4, 5): amount_columns.append(col_letter)
                 cell = ws[f'{col_letter}{row_num}']
                 cell.value = x
+                cell.border = self.thin_border
+                if col_letter in ("A", "B", "D"): cell.alignment = Alignment(horizontal='center')
+                if col_letter in ("B", "D"): cell.number_format = "@"
+
+                if col_num not in (1, 2, 3, 4, 5): 
+                    amount_columns.append(col_letter)
+                    cell.number_format = "0,00#.00_);(0,00#.00)"
                 col_num += 1
             
             row_num += 1
@@ -229,7 +274,28 @@ class Create_File:
         row_num += 1
         cell = ws[f'A{row_num}']
         cell.value = "TOTAL"
+        
+        for col in ("A", "B", "C", "D", "E"): 
+            cell = ws[f'{col}{row_num}']
+            cell.font = Font(bold=True)
+            cell.border = self.double_rule
 
         for col in amount_columns:
             cell = ws[f'{col}{row_num}']
             cell.value = f'=SUM({col}{start_row}:{col}{end_row})'
+            cell.font = Font(bold=True)
+            cell.number_format ="0,00#.00_);(0,00#.00)"
+            cell.border = self.double_rule
+
+    def long_date(self, _date):
+        if type(_date) == str:
+            _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
+
+        return _date.strftime("%B %d, %Y")
+
+
+    def short_date(self, _date):
+        if type(_date) == str:
+            _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
+
+        return _date.strftime("%d-%b-%Y")

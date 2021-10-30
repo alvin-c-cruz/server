@@ -21,12 +21,14 @@ def Login():
 		from .dataclass import User
 		db = get_db()
 		user = User(db=db)
-		user.find(username=username)
 
-		if not user:
+		if not db.execute('SELECT username FROM tbl_user WHERE username=?;', (username, )).fetchone():
 			error = "User is not registered"
-		elif not check_password_hash(user.password, password):
-			error = "Invalid password"
+		else:
+			user.get(db.execute('SELECT id FROM tbl_user WHERE username=?;', (username, )).fetchone()[0])
+
+			if not check_password_hash(user.password, password):
+				error = "Invalid password"
 		
 		if error is None:
 			print('Hello World')

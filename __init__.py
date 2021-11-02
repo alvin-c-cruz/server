@@ -18,11 +18,16 @@ def create_app(test_mode=False):
 
 
 	# Ensure the instance and test folder exists
-	try:
-		os.makedirs(app.instance_path)
-		os.makedirs('test')
-	except OSError:
-		pass
+	required_folders = [
+		app.instance_path,
+		os.path.join(app.instance_path, 'downloads/'),
+		'test',
+	]
+	for _dir in required_folders:
+		try:
+			os.makedirs(_dir)
+		except OSError:
+			pass
 
 	views = [
 		blueprints.home_page,

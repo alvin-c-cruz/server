@@ -8,7 +8,7 @@ from .. account import Account
 
 from .dataclass import CD, Create_File
 
-MAX_ROW = 15
+MAX_ROW = 10
 
 bp = Blueprint('cd', __name__, template_folder="pages", url_prefix="/cd")
 

@@ -35,8 +35,8 @@
                 {{vendor['address']}}
             </td>
             <td class="bordered-thick">
-                <a href="{{url_for('vendor.Edit', vendor_id=vendor['id'])}}">Edit</a>
-                <a href="{{url_for('vendor.Delete', vendor_id=vendor['id'])}}" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('vendor.Edit', vendor_id=vendor['id'])}}"  class="button">Edit</a>
+                <a href="{{url_for('vendor.Delete', vendor_id=vendor['id'])}}"  class="button" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
             </td>
         </tr>
             {% endfor %}

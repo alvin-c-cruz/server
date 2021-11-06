@@ -53,8 +53,9 @@
                 {{cd['check_number']}}
             </td>
             <td class="bordered-thick">
-                <a href="{{url_for('cd.Edit', cd_id=cd['id'])}}">Edit</a>
-                <a href="{{url_for('cd.Delete', cd_id=cd['id'])}}" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('cd.Edit', cd_id=cd['id'])}}" class="button">Edit</a>
+                <a href="{{url_for('cd.Delete', cd_id=cd['id'])}}" class="button" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('cd.Print', cd_id=cd['id'])}}" class="button" target="_blank">Print</a>
             </td>
         </tr>
             {% endfor %}

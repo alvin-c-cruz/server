@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from ... packages import SimpleEntry
-from sqlite_data_model import sqliteDataModel
 
 @dataclass
-class Vendor(sqliteDataModel):
+class Vendor(SimpleEntry):
 	name: str = None
 	tin: str = None
 	address: str = None

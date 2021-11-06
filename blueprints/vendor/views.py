@@ -31,7 +31,8 @@ def Add():
 			vendor = Vendor(
 				db=db, 
 				name=form['name'], 
-				tin=form['tin']
+				tin=form['tin'],
+				address=form['address']
 				).save()
 			flash(f"{form['name']} has been saved.")
 
@@ -60,6 +61,7 @@ def Edit(vendor_id):
 		vendor.id = vendor_id
 		vendor.name = form['name']
 		vendor.tin = form['tin']
+		vendor.address = form['address']
 
 		if error:
 			flash(error)

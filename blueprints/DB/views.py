@@ -32,10 +32,36 @@ def init_db():
 	db = get_db()
 
 	from ..auth import User
+	from ..options import Options
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..cd import CD
 
+	#  This structure uses sqlite_data_model
+	models = [Options]
+	for model in models:
+		try:
+			model(db=db).delete_table
+			model(db=db).create_table
+		except:
+			pass
+
+	#  Default values
+	defaults = {
+		'company_name': "Company Name",
+		'cd_prepared': "MGV",
+		'cd_checked': "ATVT",
+		'cd_audited': "",
+		'cd_approved': "LTV",
+	}
+
+	for key, value in defaults.items():
+		opt = Options(db=db)
+		opt.keyword = key
+		opt.value = value
+		opt.save
+	
+	#  TODO: Codes below should be refactored to use sqlite_data_model
 	User(db=db).init_db
 	Account(db=db).init_db
 	Vendor(db=db).init_db

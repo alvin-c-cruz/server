@@ -263,7 +263,7 @@ class Create_File:
 
                 if col_num not in (1, 2, 3, 4, 5): 
                     amount_columns.append(col_letter)
-                    cell.number_format = "0,00#.00_);(0,00#.00)"
+                    cell.number_format = "#,##0.00_);(#,##0.00)"
                 col_num += 1
             
             row_num += 1
@@ -284,7 +284,7 @@ class Create_File:
             cell = ws[f'{col}{row_num}']
             cell.value = f'=SUM({col}{start_row}:{col}{end_row})'
             cell.font = Font(bold=True)
-            cell.number_format ="0,00#.00_);(0,00#.00)"
+            cell.number_format ="#,##0.00_);(#,##0.00)"
             cell.border = self.double_rule
 
     def long_date(self, _date):

@@ -30,6 +30,7 @@ def create_app(test_mode=False):
 			pass
 
 	views = [
+		blueprints.options,
 		blueprints.home_page,
 		blueprints.auth,
 		blueprints.DB,

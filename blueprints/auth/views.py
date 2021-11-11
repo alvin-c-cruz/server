@@ -10,6 +10,7 @@ bp = Blueprint('auth', __name__, template_folder='pages', url_prefix='/auth')
 def Home():
 	return "Users Home Page."
 
+
 @bp.route('/login', methods=['POST', 'GET'])
 def Login():
 	if request.method == 'POST':
@@ -31,14 +32,13 @@ def Login():
 				error = "Invalid password"
 		
 		if error is None:
-			print('Hello World')
 			session.clear()
 			session['user_id'] = user.id
 			return redirect(url_for('home_page.Home'))
 
 		flash(error)
 
-	return render_template('auth/login.html', program_title="Philgen Accounting")
+	return render_template('auth/login.html')
 
 
 @bp.route('/logout')
@@ -60,14 +60,53 @@ def load_logged_in_user():
 		user.get(user_id)
 		g.user = user
 
+@bp.before_app_request
+def load_company_name():
+	from .. DB import get_db
+	from .. options import Options
+	company_name = session.get('company_name')
 
+	if company_name is None:
+		opt = Options(db=get_db())
+		opt.get(keyword="company_name")
+		company_name = opt.value
+		g.company_name = company_name
+		session['company_name'] = company_name
+	else:
+		g.company_name = company_name
+	
+	if g.get('cd_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cd_prepared')
+		session['cd_prepared'] = opt.value
+		g.cd_prepared = opt.value
+
+	if g.get('cd_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cd_checked')
+		session['cd_checked'] = opt.value
+		g.cd_checked = opt.value
+
+	if g.get('cd_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cd_audited')
+		session['cd_audited'] = opt.value
+		g.cd_audited = opt.value
+
+	if g.get('cd_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cd_approved')
+		session['cd_approved'] = opt.value
+		g.cd_approved = opt.value
+
+
+	
 def login_required(view):
 	@functools.wraps(view)
 	def wrapped_view(**kwargs):
 		if g.get('user') is None: return redirect(url_for('auth.Login'))
 		return view(**kwargs)
 	return wrapped_view
-
 
 
 def add_user():
@@ -89,7 +128,6 @@ def add_user():
 	user.save()
 
 
-
 @click.command('add-user')
 @with_appcontext
 def add_user_command():
@@ -101,3 +139,5 @@ def user_app(app):
 	from .. DB import close_db
 	app.teardown_appcontext(close_db)
 	app.cli.add_command(add_user_command)
+
+

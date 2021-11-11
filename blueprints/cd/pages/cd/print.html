@@ -7,7 +7,7 @@
 <div class="container">
     <header>
         <div class="flex-row justify-center">
-            <h3>PHILGEN PACIFIC FOOD PRODUCTS CORPORATION</h3>    
+            <h3>{{g.company_name.upper()}}</h3>    
         </div>
 
         <div class="flex-row justify-center">
@@ -85,16 +85,15 @@
             <div class="flex-row justify-center">
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Prepared by:</label>
-                    <span class="flex-row flex-3 justify-center border-bottom align-end">MGV</span>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.cd_prepared}}</span>
                 </div>
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Audited by:</label>
-                    <span class="flex-row flex-3 justify-center border-bottom align-end"></span>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.cd_audited}}</span>
                 </div>
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Received by:</label>
                     <span class="flex-row flex-3 justify-center border-bottom align-end"></span>
-                    
                 </div>
             </div>
         </div>
@@ -102,11 +101,11 @@
             <div class="flex-row justify-center">
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Checked by:</label>
-                    <span class="flex-row flex-3 justify-center border-bottom align-end">ATVT</span>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.cd_checked}}</span>
                 </div>
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Approved by:</label>
-                    <span class="flex-row flex-3 justify-center border-bottom align-end">LTV</span>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.cd_approved}}</span>
                 </div>
                 <div class="flex-row flex-1 height-50">
                     <label class="flex-row flex-2 align-end">Date:</label>

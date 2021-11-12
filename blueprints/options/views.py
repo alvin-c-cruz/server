@@ -10,7 +10,7 @@ bp = Blueprint('options', __name__, template_folder="pages", url_prefix="/option
 
 @bp.route('/')
 def Home():
-    return "Option Home"
+    return render_template('options/home.html')
 
 
 @bp.route("/company")

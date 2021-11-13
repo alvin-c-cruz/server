@@ -198,6 +198,7 @@ def View(date_from, date_to):
 	
 	cds = cds.append(cds.sum(numeric_only=True), ignore_index=True)
 	cds = cds.fillna('')
+	cds = cds.replace(0, '')
 
 	return render_template('cd/view.html', cds=cds, date_from=date_from, date_to=date_to)
 

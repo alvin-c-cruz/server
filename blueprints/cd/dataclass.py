@@ -1,4 +1,4 @@
-from flask import flash, current_app
+from flask import flash, current_app, session, g
 from datetime import date
 from dataclasses import dataclass
 import os
@@ -207,7 +207,7 @@ class Create_File:
         #  Report head
         row_num = 1
         cell = ws[f'A{row_num}']
-        cell.value = "Philgen Pacific Food Products Corporation"
+        cell.value = session.get('company_name')
         cell.font = Font(size=14, bold=True)
 
         row_num += 1

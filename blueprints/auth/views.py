@@ -60,6 +60,7 @@ def load_logged_in_user():
 		user.get(user_id)
 		g.user = user
 
+
 @bp.before_app_request
 def load_options():
 	from .. DB import get_db

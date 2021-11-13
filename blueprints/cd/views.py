@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session, g, send_file
 from datetime import date, timedelta
+import pandas as pd
 
 from .. auth import login_required
 from .. DB import get_db
 from .. vendor import Vendor
 from .. account import Account
 
-from .dataclass import CD, Create_File
+from .dataclass import CD, Create_File, get_cd
 
 MAX_ROW = 10
 
@@ -177,5 +178,27 @@ def Download(date_from, date_to):
 	f = Create_File(date_from=date_from, date_to=date_to)
 	
 	return send_file('{}'.format(f.filename), as_attachment=True, cache_timeout=0)
+
+
+@bp.route('/view?<date_from>&<date_to>')
+@login_required
+def View(date_from, date_to):
+	cds = get_cd(date_from, date_to)
+
+
+
+	column_format = {}
+	for key in cds.keys():
+		if key not in ('DATE', 'CD No.', 'NAME', 'CHECK No.', 'DESCRIPTION'):
+			cds[key] = (
+			    pd.to_numeric(cds[key],
+			                  errors='coerce')
+			      .fillna(0)
+			    )			
+	
+	cds = cds.append(cds.sum(numeric_only=True), ignore_index=True)
+	cds = cds.fillna('')
+
+	return render_template('cd/view.html', cds=cds, date_from=date_from, date_to=date_to)
 
 

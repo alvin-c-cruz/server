@@ -15,6 +15,7 @@
             <input type="date" name="date_to" value="{{date_to}}">
             <input type="submit" value="Refresh" class="button">
             <a href="{{url_for('cd.Download', date_from=date_from, date_to=date_to)}}" class="button">Download</a>
+            <a href="{{url_for('cd.View', date_from=date_from, date_to=date_to)}}" target="_blank" class="button">View</a>
         </div>        
     </form>
 

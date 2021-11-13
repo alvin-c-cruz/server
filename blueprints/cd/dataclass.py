@@ -92,6 +92,87 @@ class CD(Voucher):
         return True
 
 
+def get_cd(date_from, date_to):
+    def short_date(_date):
+        if type(_date) == str:
+            _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
+
+        return _date.strftime("%d-%b-%Y")
+
+    #  Open model        
+    db = get_db()
+
+    #  Create initial dataframe
+    sql = f"""SELECT 
+                cd.id as id,
+                cd.record_date as DATE, 
+                cd.cd_num AS "CD No.", 
+                v.name as NAME, 
+                cd.check_number as "CHECK No.",
+                cd.description as DESCRIPTION
+            
+            FROM tbl_cd as cd
+            
+            INNER JOIN tbl_vendor as v ON cd.vendor_id = v.id
+
+            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+        ;
+        """
+    df_cd = pd.read_sql_query(sql, db)
+    df_cd = df_cd.set_index('id')
+
+    for key, row in df_cd.iterrows():
+        row.DATE = short_date(row.DATE)
+
+
+    #  Collect account titles and add to main dataframe
+    sql = f"""SELECT 
+                acct.name as account_title
+            
+            FROM tbl_cd_entry as entry
+            
+            INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
+            INNER JOIN tbl_account as acct on acct.id = entry.account_id
+
+            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+
+            GROUP BY acct.name
+
+            ORDER BY acct.account_number
+        ;
+        """
+    df_accounts = pd.read_sql_query(sql, db)
+    list_accounts = []
+    for key, row in df_accounts.iterrows():
+        account_title = row.account_title
+        list_accounts.append(account_title.upper())
+
+    for col_name in list_accounts: df_cd[col_name] = ""
+
+    #  Gather entries and record to proper row and column
+    sql = f"""SELECT 
+                cd.id, 
+                acct.name as account_title,
+                (entry.debit-entry.credit) as amount 
+            
+            FROM tbl_cd_entry as entry
+            
+            INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
+            INNER JOIN tbl_account as acct on acct.id = entry.account_id
+
+            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+        ;
+        """
+    df_entry = pd.read_sql_query(sql, db)
+    df_entry = df_entry.set_index('id')
+
+    for key, row in df_entry.iterrows():
+        account_title, amount = row
+        df_cd.loc[key][account_title.upper()] = amount
+
+    return df_cd
+
+
 @dataclass
 class Create_File:
     date_from: str
@@ -113,79 +194,8 @@ class Create_File:
         #  Downloaded filename
         self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Cash Disbursement Journal.xlsx")
         
-        #  Open model        
-        db = get_db()
-        self.cds = CD(db).range(self.date_from, self.date_to)
 
-        #  Create initial dataframe
-        sql = f"""SELECT 
-                    cd.id as id,
-                    cd.record_date as DATE, 
-                    cd.cd_num AS "CD No.", 
-                    v.name as NAME, 
-                    cd.check_number as "CHECK No.",
-                    cd.description as DESCRIPTION
-                
-                FROM tbl_cd as cd
-                
-                INNER JOIN tbl_vendor as v ON cd.vendor_id = v.id
-
-                WHERE cd.record_date>="{self.date_from}" AND cd.record_date<="{self.date_to}"
-            ;
-            """
-        df_cd = pd.read_sql_query(sql, db)
-        df_cd = df_cd.set_index('id')
-
-        for key, row in df_cd.iterrows():
-            row.DATE = self.short_date(row.DATE)
-
-
-        #  Collect account titles and add to main dataframe
-        sql = f"""SELECT 
-                    acct.name as account_title
-                
-                FROM tbl_cd_entry as entry
-                
-                INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
-                INNER JOIN tbl_account as acct on acct.id = entry.account_id
-
-                WHERE cd.record_date>="{self.date_from}" AND cd.record_date<="{self.date_to}"
-
-                GROUP BY acct.name
-
-                ORDER BY acct.account_number
-            ;
-            """
-        df_accounts = pd.read_sql_query(sql, db)
-        list_accounts = []
-        for key, row in df_accounts.iterrows():
-            account_title = row.account_title
-            list_accounts.append(account_title.upper())
-
-        for col_name in list_accounts: df_cd[col_name] = ""
-
-        #  Gather entries and record to proper row and column
-        sql = f"""SELECT 
-                    cd.id, 
-                    acct.name as account_title,
-                    (entry.debit-entry.credit) as amount 
-                
-                FROM tbl_cd_entry as entry
-                
-                INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
-                INNER JOIN tbl_account as acct on acct.id = entry.account_id
-
-                WHERE cd.record_date>="{self.date_from}" AND cd.record_date<="{self.date_to}"
-            ;
-            """
-        df_entry = pd.read_sql_query(sql, db)
-        df_entry = df_entry.set_index('id')
-
-        for key, row in df_entry.iterrows():
-            account_title, amount = row
-            df_cd.loc[key][account_title.upper()] = amount
-
-        self.df_cd = df_cd
+        self.df_cd = get_cd(self.date_from, self.date_to)
 
         self.create()
 
@@ -294,8 +304,3 @@ class Create_File:
         return _date.strftime("%B %d, %Y")
 
 
-    def short_date(self, _date):
-        if type(_date) == str:
-            _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
-
-        return _date.strftime("%d-%b-%Y")

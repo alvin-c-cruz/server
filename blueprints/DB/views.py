@@ -35,18 +35,22 @@ def init_db():
 	from ..options import Options
 	from ..account import Account
 	from ..vendor import Vendor
+	from ..customer import Customer
 	from ..cd import CD
 
 	#  This structure uses sqlite_data_model
-	models = [Options]
+	models = [Customer]
 	for model in models:
 		try:
-			model(db=db).delete_table
 			model(db=db).create_table
 		except:
 			pass
 
 	#  Default values
+	opt = Options(db=db)
+	opt.delete_table
+	opt.create_table
+	
 	defaults = {
 		'company_name': "Company Name",
 		'cd_prepared': "MGV",
@@ -54,7 +58,6 @@ def init_db():
 		'cd_audited': "",
 		'cd_approved': "LTV",
 	}
-
 	for key, value in defaults.items():
 		opt = Options(db=db)
 		opt.keyword = key

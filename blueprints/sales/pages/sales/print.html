@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Print Preview: CD No. {{cd.cd_num}}</title>
+    <title>Print Preview: SV No. {{sale.cd_num}}</title>
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/voucher.css')}}">
 </head>
 <body>
@@ -13,12 +13,12 @@
         <div class="flex-row justify-center">
             <div class="flex-1"></div>
             <div class="flex-row flex-1 justify-center">
-                <h4><u>CASH VOUCHER</u></h4>
+                <h4><u>SALES VOUCHER</u></h4>
             </div>            
             <div class="flex-row flex-1 justify-end align-right">
                 <div class="flex-row justify-end align-center">
                     <label>No.</label>
-                    <span><strong class="font-red">{{cd.cd_num}}</strong></span>                    
+                    <span><strong class="font-red">{{sale.sv_num}}</strong></span>                    
                 </div>
             </div>
         </div>
@@ -26,10 +26,10 @@
         <div class="flex-row justify-center">
             <div class="flex-row flex-3">
                 <div class="flex-row flex-1 align-center">
-                    <label>PAID TO: </label>                     
+                    <label>SOLD TO: </label>                     
                 </div>
                 <div class="flex-row flex-3 align-center border-bottom">
-                    <span class="flex-shrink">{{cd.vendor_name}}</span>                       
+                    <span class="flex-shrink">{{sale.vendor_name}}</span>                       
                 </div>
             </div>
             <div class="flex-row flex-2">
@@ -48,10 +48,10 @@
             </div>
             <div class="flex-row flex-2">
                 <div class="flex-row flex-1 justify-end">
-                    <label>CHECK NO.: </label>                   
+                    <label>INVOICE NO.: </label>                   
                 </div>
                 <div class="flex-row flex-2 justify-center border-bottom">
-                    <span>{{cd.check_number}}</span>                    
+                    <span>{{sale.invoice_num}}</span>                    
                 </div>
             </div>             
         </div>

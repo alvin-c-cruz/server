@@ -1,8 +1,14 @@
 <nav class="nav-bar flex justify-left">
 	<a href="{{url_for('home_page.Home')}}" class="nav-button">Home</a>
-	<a href="{{url_for('account.Home')}}" class="nav-button">Accounts</a>
-	<a href="{{url_for('vendor.Home')}}" class="nav-button">Vendors</a>
-	<a href="{{url_for('cd.Home')}}" class="nav-button">Disbursements</a>
-	<a href="{{url_for('options.Home')}}" class="nav-button">Options</a>
+	<a href="{{url_for('cd.Home')}}" class="nav-button">CDJ</a>
+	<div class="nav-dropdown">
+		<a href="#" class="nav-button">Registers</a>
+		<div class="flex-column nav-dropdown-content">
+			<a href="{{url_for('account.Home')}}" class="nav-button">Accounts</a>
+			<a href="{{url_for('customer.Home')}}" class="nav-button">Customers</a>
+			<a href="{{url_for('vendor.Home')}}" class="nav-button">Vendors</a>
+			<a href="{{url_for('options.Home')}}" class="nav-button">Options</a>		
+		</div>
+	</div>
 	<a href="{{url_for('auth.Logout')}}" class="nav-button align-right">Log Out</a>
 </nav>

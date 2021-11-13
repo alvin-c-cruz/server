@@ -36,6 +36,7 @@ def create_app(test_mode=False):
 		blueprints.DB,
 		blueprints.account,
 		blueprints.vendor,
+		blueprints.customer,
 		blueprints.cd,
 	]
 	for view in views:

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Edit Customer</h1>
+
+    <form method="post" action="{{url_for('customer.Edit', customer_id=customer_id)}}" class="flex-column">
+        {{csrf_token}}
+        <table>
+            <tr>
+                <td>
+                    <label for="name">Customer Name</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="name" value="{{customer['name']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="tin">Tax Identification Number</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="tin" value="{{customer['tin']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="address">Address</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="address" value="{{customer['address']}}">
+                </td>
+            </tr>
+        </table>
+        <div class="flex flex-1 justify-center gap-20 height-50">
+            <input type="submit" class="button width-125" value="Update" name="cmd_button">
+        </div>
+</form>
+
+
+{% endblock %}

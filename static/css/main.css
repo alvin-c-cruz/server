@@ -121,7 +121,23 @@ body {
 
 /* Button */
 .nav-bar {
+    overflow: hidden;
     background-color: #4CAF50; /* Green */
+}
+
+.nav-dropdown {
+    overflow: hidden;
+}
+
+.nav-dropdown-content {
+    display: None;
+    position: absolute;
+    z-index: 1;
+}
+
+.nav-dropdown:hover .nav-dropdown-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .nav-button {
@@ -157,6 +173,7 @@ body {
     background-color: rgb(192, 92, 192);
 }
 
+/* Padding */
 .padding-20 {
     padding: 20px;
 }

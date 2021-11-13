@@ -24,7 +24,7 @@ def Home():
 				opt.value = form[keyword]
 				opt.save
 				session[keyword] = form[keyword]
-				
+
 			g.company_name = company_name
 			g.cd_prepared = form['cd_prepared']
 			g.cd_checked = form['cd_checked']
@@ -45,15 +45,5 @@ def Home():
 			form[keyword] = value
 
 	return render_template('options/home.html', form=form)
-
-
-@bp.route("/company")
-def Company():
-    return "Company"
-
-
-@bp.route("/cd")
-def CD():
-    return "CD signatories"
 
 

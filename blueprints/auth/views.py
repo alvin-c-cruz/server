@@ -61,7 +61,7 @@ def load_logged_in_user():
 		g.user = user
 
 @bp.before_app_request
-def load_company_name():
+def load_options():
 	from .. DB import get_db
 	from .. options import Options
 	company_name = session.get('company_name')

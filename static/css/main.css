@@ -168,8 +168,30 @@ body {
 
 
 /* Width */
+.width-75p {
+    width: 75%;
+}
+
+.width-25p {
+    width: 25%;
+}
+
 .width-125 {
     width: 125px;
+}
+
+.width-600 {
+    width: 600px;
+}
+
+/* Margin */
+.margin-auto {
+    margin: auto;
+}
+
+.margin-10-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* Font */

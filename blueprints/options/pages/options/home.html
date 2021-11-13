@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
+{% from 'macros.html' import line_entry %}
 
 {% block content %}
-    
+    <header class="flex">
+    </header>
+    <main>
+    	<form method="post" action="{{url_for('options.Home')}}" class="flex-column width-600 margin-auto">
+	    	<h1 class="text-center">Options</h1>
+    		<fieldset class="bordered">
+    			<legend>Company Information</legend>
+		    	{{ line_entry("company_name", "Company Name", form.company_name) }}    			
+    		</fieldset>
+
+	    	<fieldset class="bordered">
+	    		<legend>Signatories for Cash Disbursement</legend>
+		    	{{ line_entry("cd_prepared", "Prepared by: ", form.cd_prepared) }}		
+		    	{{ line_entry("cd_checked", "Check by: ", form.cd_checked) }}		
+		    	{{ line_entry("cd_audited", "Audited by: ", form.cd_audited) }}		
+		    	{{ line_entry("cd_approved", "Approved by: ", form.cd_approved) }}		
+	    	</fieldset>
+
+	    	<input type="submit" value="Save" class="button width-125 margin-auto margin-10-10 padding-20">
+    	</form>
+    </main>
 {% endblock %}

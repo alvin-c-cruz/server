@@ -36,6 +36,7 @@ def init_db():
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..customer import Customer
+	from ..sales import Sales
 	from ..cd import CD
 
 	#  This structure uses sqlite_data_model
@@ -68,6 +69,7 @@ def init_db():
 	User(db=db).init_db
 	Account(db=db).init_db
 	Vendor(db=db).init_db
+	Sales(db=db).init_db
 	CD(db=db).init_db
 
 

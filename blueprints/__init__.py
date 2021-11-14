@@ -5,4 +5,5 @@ from . import DB
 from . import account
 from . import vendor
 from . import customer
+from . import sales
 from . import cd

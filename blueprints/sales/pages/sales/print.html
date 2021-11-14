@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Print Preview: SV No. {{sale.cd_num}}</title>
+    <title>Print Preview: SV No. {{sale.sv_num}}</title>
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/voucher.css')}}">
 </head>
 <body>
@@ -29,7 +29,7 @@
                     <label>SOLD TO: </label>                     
                 </div>
                 <div class="flex-row flex-3 align-center border-bottom">
-                    <span class="flex-shrink">{{sale.vendor_name}}</span>                       
+                    <span class="flex-shrink">{{sale.customer_name}}</span>                       
                 </div>
             </div>
             <div class="flex-row flex-2">
@@ -37,7 +37,7 @@
                     <label>DATE: </label>                    
                 </div>
                 <div class="flex-row flex-2 justify-center border-bottom">
-                    <span>{{cd.record_date}}</span>                    
+                    <span>{{sale.record_date}}</span>                    
                 </div>
             </div>             
         </div>
@@ -63,7 +63,7 @@
             <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>CREDIT</strong></label>            
         </div>
 
-        {% for entry in cd.entry %}
+        {% for entry in sale.entry %}
         <div class="flex-row justify-center">
             {% if entry.debit %}
             <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-10">{{entry.account_title}}</span></label>
@@ -79,7 +79,7 @@
     <footer class="flex-column">
         <div class="flex-column line-bordered border-bottom height-100">
             <span class="margin-left-10">P A R T I C U L A R S:</span>
-            <span class="margin-left-50 margin-right-10">{{cd.description}}</span>
+            <span class="margin-left-50 margin-right-10">{{sale.description}}</span>
         </div>
         <div class="flex-column">
             <div class="flex-row justify-center">

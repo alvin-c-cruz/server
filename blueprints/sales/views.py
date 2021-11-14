@@ -4,14 +4,14 @@ import pandas as pd
 
 from .. auth import login_required
 from .. DB import get_db
-from .. vendor import Vendor
+from .. customer import Customer
 from .. account import Account
 
-from .dataclass import CD, Create_File, get_cd
+from .dataclass import Sales, Create_File, get_sales
 
 MAX_ROW = 10
 
-bp = Blueprint('cd', __name__, template_folder="pages", url_prefix="/cd")
+bp = Blueprint('sales', __name__, template_folder="pages", url_prefix="/sales")
 
 
 @bp.route('/', methods=['POST', 'GET'])
@@ -26,135 +26,135 @@ def Home():
 	    date_to = date(_date.year, _date.month + 1, 1) - timedelta(days=1)
 
 	db = get_db()
-	cds = []
+	sales = []
 
 
-	for cd in CD(db).range(date_from, date_to):
-		id = cd['id']
-		record_date = date(int(cd['record_date'][:4]), int(cd['record_date'][5:7]), int(cd['record_date'][-2:])).strftime("%d-%b-%Y")
-		cd_num = cd['cd_num']
-		vendor_name = cd['vendor_name']
-		check_number = cd['check_number']
+	for sale in Sales(db).range(date_from, date_to):
+		id = sale['id']
+		record_date = date(int(sale['record_date'][:4]), int(sale['record_date'][5:7]), int(sale['record_date'][-2:])).strftime("%d-%b-%Y")
+		sv_num = sale['sv_num']
+		customer_name = sale['customer_name']
+		invoice_num = sale['invoice_num']
 
-		cds.append(
+		sales.append(
 			{
 				'id': id,
 				'record_date': record_date,
-				'cd_num': cd_num,
-				'vendor_name': vendor_name, 
-				'check_number': check_number
+				'sv_num': sv_num,
+				'customer_name': customer_name, 
+				'invoice_num': invoice_num
 				}
 			)
 
-	return render_template('cd/home.html', cds=cds, date_from=date_from, date_to=date_to)
+	return render_template('sales/home.html', sales=sales, date_from=date_from, date_to=date_to)
 
 
 @bp.route('/add', methods=['POST', 'GET'])
 @login_required
 def Add():
 	db = get_db()
-	vendors = Vendor(db=db).all()
+	customers = Customer(db=db).all()
 	accounts = Account(db=db).all()
-	cd = CD(db=db)
+	sale = Sales(db=db)
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('cd.Home'))
+			return redirect(url_for('sales.Home'))
 		else:
-			cd.cd_num = request.form.get('cd_num')
-			cd.record_date = str(request.form.get('record_date'))[:10]
-			cd.vendor_id = int(request.form.get('vendor_id'))
-			cd.check_number = request.form.get('check_number')
-			cd.description = request.form.get('description')
+			sale.sv_num = request.form.get('sv_num')
+			sale.record_date = str(request.form.get('record_date'))[:10]
+			sale.customer_id = int(request.form.get('customer_id'))
+			sale.invoice_num = request.form.get('invoice_num')
+			sale.description = request.form.get('description')
 
 			for i in range(0, MAX_ROW):
 				i += 1
-				cd.add_entry(
+				sale.add_entry(
 					i=i, 
 					account_id=int(request.form.get(f'{i}_account_id')),
 					debit=request.form.get(f'{i}_debit'),
 					credit=request.form.get(f'{i}_credit'),
 					)
 
-			if cd.is_validated():
-				cd.save()
+			if sale.is_validated():
+				sale.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('cd.Add'))
+					return redirect(url_for('sales.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('cd.Edit', cd_id=cd.id))
+					return redirect(url_for('sales.Edit', sales_id=sale.id))
 
 	else:		
 		for i in range(0, MAX_ROW):
-			cd.add_entry(i=i+1)
+			sale.add_entry(i=i+1)
 	
-	form = cd
+	form = sale
 
-	return render_template('cd/add.html', form=form, vendors=vendors, accounts=accounts)
+	return render_template('sales/add.html', form=form, customers=customers, accounts=accounts)
 
 
-@bp.route('/edit/<int:cd_id>', methods=['POST', 'GET'])
+@bp.route('/edit/<int:sales_id>', methods=['POST', 'GET'])
 @login_required
-def Edit(cd_id):
+def Edit(sales_id):
 	db = get_db()
-	vendors = Vendor(db=db).all()
+	customers = Customer(db=db).all()
 	accounts = Account(db=db).all()
-	cd = CD(db=db)
-	cd.get(cd_id)
+	sale = Sales(db=db)
+	sale.get(sales_id)
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('cd.Home'))
+			return redirect(url_for('sales.Home'))
 		elif request.form.get('cmd_button') == "Print":
-			return redirect(url_for('cd.Print', cd_id=cd_id))
+			return redirect(url_for('sales.Print', sales_id=sales_id))
 		else:
-			cd.cd_num = request.form.get('cd_num')
-			cd.record_date = str(request.form.get('record_date'))[:10]
-			cd.vendor_id = int(request.form.get('vendor_id'))
-			cd.check_number = request.form.get('check_number')
-			cd.description = request.form.get('description')
+			sale.sv_num = request.form.get('sv_num')
+			sale.record_date = str(request.form.get('record_date'))[:10]
+			sale.customer_id = int(request.form.get('customer_id'))
+			sale.invoice_num = request.form.get('invoice_num')
+			sale.description = request.form.get('description')
 
 			for i in range(0, MAX_ROW):
 				i += 1
-				cd.update_entry(
+				sale.update_entry(
 					i, 
 					account_id=int(request.form.get(f'{i}_account_id')),
 					debit=request.form.get(f'{i}_debit'),
 					credit=request.form.get(f'{i}_credit'),
 					)
 
-			if cd.is_validated():
-				cd.save()
+			if sale.is_validated():
+				sale.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('cd.Add'))
+					return redirect(url_for('sales.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('cd.Edit', cd_id=cd.id))
+					return redirect(url_for('sales.Edit', sales_id=sale.id))
 	
-	form = cd
+	form = sale
 
-	return render_template('cd/edit.html', form=form, vendors=vendors, accounts=accounts)
+	return render_template('sales/edit.html', form=form, customers=customers, accounts=accounts)
 
 
-@bp.route('/delete/<int:cd_id>')
+@bp.route('/delete/<int:sales_id>')
 @login_required
-def Delete(cd_id):
+def Delete(sales_id):
 	db = get_db()
-	cd = CD(db=db)
-	cd.get(cd_id)
-	cd.delete()
-	return redirect(url_for('cd.Home'))
+	sale = Sales(db=db)
+	sale.get(sales_id)
+	sale.delete()
+	return redirect(url_for('sales.Home'))
 
 
-@bp.route('/print/<int:cd_id>')
+@bp.route('/print/<int:sales_id>')
 @login_required
-def Print(cd_id):
+def Print(sales_id):
 	db = get_db()
-	cd = CD(db=db)
-	cd.get(cd_id)
-	_year = int(cd.record_date[:4])
-	_month = int(cd.record_date[5:7])
-	_day = int(cd.record_date[-2:])
-	cd.record_date = date(_year, _month, _day).strftime("%B %d, %Y")
-	for entry in cd.entry:
+	sale = Sales(db=db)
+	sale.get(sales_id)
+	_year = int(sale.record_date[:4])
+	_month = int(sale.record_date[5:7])
+	_day = int(sale.record_date[-2:])
+	sale.record_date = date(_year, _month, _day).strftime("%B %d, %Y")
+	for entry in sale.entry:
 		if entry.account_id != 0:
 			entry.account_title = db.execute(
 					'SELECT name FROM tbl_account WHERE id=?', 
@@ -169,7 +169,7 @@ def Print(cd_id):
 		else:
 			entry.account_title = ""
 
-	return render_template('cd/print.html', cd=cd)
+	return render_template('sales/print.html', sale=sale)
 
 
 @bp.route('/download?<date_from>&<date_to>')
@@ -183,23 +183,23 @@ def Download(date_from, date_to):
 @bp.route('/view?<date_from>&<date_to>')
 @login_required
 def View(date_from, date_to):
-	cds = get_cd(date_from, date_to)
+	sales = get_sales(date_from, date_to)
 
 
 
 	column_format = {}
-	for key in cds.keys():
-		if key not in ('DATE', 'CD No.', 'NAME', 'CHECK No.', 'DESCRIPTION'):
-			cds[key] = (
-			    pd.to_numeric(cds[key],
+	for key in sales.keys():
+		if key not in ('DATE', 'SV No.', 'NAME', 'INVOICE No.', 'DESCRIPTION'):
+			sales[key] = (
+			    pd.to_numeric(sales[key],
 			                  errors='coerce')
 			      .fillna(0)
 			    )			
 	
-	cds = cds.append(cds.sum(numeric_only=True), ignore_index=True)
-	cds = cds.fillna('')
-	cds = cds.replace(0, '')
+	sales = sales.append(sales.sum(numeric_only=True), ignore_index=True)
+	sales = sales.fillna('')
+	sales = sales.replace(0, '')
 
-	return render_template('cd/view.html', cds=cds, date_from=date_from, date_to=date_to)
+	return render_template('sales/view.html', sales=sales, date_from=date_from, date_to=date_to)
 
 

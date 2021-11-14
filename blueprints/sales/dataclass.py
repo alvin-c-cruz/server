@@ -13,7 +13,7 @@ from .. DB import get_db
 from ... packages import Voucher
 
 @dataclass
-class CD(Voucher):
+class Sales(Voucher):
     sv_num: str = ""
     record_date: str = str(date.today())
     customer_id: int = 0
@@ -44,14 +44,14 @@ class CD(Voucher):
     	else:
     		sql = f"""
     			SELECT 
-    				tbl_cd.id,
-    				tbl_cd.cd_num,
-                    tbl_cd.record_date,
-                    tbl_cd.check_number,
-    				tbl_vendor.name as vendor_name,
-    				tbl_cd.description
-    			FROM tbl_cd
-    			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_cd.vendor_id
+    				tbl_sales.id,
+    				tbl_sales.sv_num,
+                    tbl_sales.record_date,
+                    tbl_sales.invoice_num,
+    				tbl_sales.name as customer_name,
+    				tbl_sales.description
+    			FROM tbl_sales
+    			INNER JOIN tbl_customer ON tbl_customer.id = tbl_sales.customer_id
     		"""
     		return self.db.execute(sql).fetchall()
 
@@ -60,39 +60,39 @@ class CD(Voucher):
         if True:
             sql = f"""
                 SELECT 
-                    tbl_cd.id,
-                    tbl_cd.cd_num,
-                    tbl_cd.record_date,
-                    tbl_vendor.name as vendor_name,
-                    tbl_cd.check_number,
-                    tbl_cd.description
-                FROM tbl_cd
-                INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_cd.vendor_id
-                WHERE tbl_cd.record_date>=? AND tbl_cd.record_date<=?
+                    tbl_sales.id,
+                    tbl_sales.sv_num,
+                    tbl_sales.record_date,
+                    tbl_customer.name as customer_name,
+                    tbl_sales.invoice_num,
+                    tbl_sales.description
+                FROM tbl_sales
+                INNER JOIN tbl_customer ON tbl_customer.id = tbl_sales.customer_id
+                WHERE tbl_sales.record_date>=? AND tbl_sales.record_date<=?
             """
             return self.db.execute(sql, (date_from, date_to)).fetchall()
 
 
     def is_validated(self):
         if self.id:
-            if self.db.execute('SELECT COUNT(*) FROM tbl_cd WHERE cd_num=? AND id!=?;', (self.cd_num, self.id)).fetchone()[0]:
-                flash("CD Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE sv_num=? AND id!=?;', (self.sv_num, self.id)).fetchone()[0]:
+                flash("SV Number is already in use.")
                 return False
-            if self.db.execute('SELECT COUNT(*) FROM tbl_cd WHERE check_number=? AND id!=?;', (self.check_number, self.id)).fetchone()[0]:
-                flash("Check Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE invoice_num=? AND id!=?;', (self.invoice_num, self.id)).fetchone()[0]:
+                flash("Invoice Number is already in use.")
                 return False
         else:
-            if self.db.execute('SELECT COUNT(*) FROM tbl_cd WHERE cd_num=?;', (self.cd_num, )).fetchone()[0]:
-                flash("CD Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE sv_num=?;', (self.sv_num, )).fetchone()[0]:
+                flash("SV Number is already in use.")
                 return False
-            if self.db.execute('SELECT COUNT(*) FROM tbl_cd WHERE check_number=?;', (self.check_number, )).fetchone()[0]:
-                flash("Check Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE invoice_num=?;', (self.invoice_num, )).fetchone()[0]:
+                flash("Invoice Number is already in use.")
                 return False
                 
         return True
 
 
-def get_cd(date_from, date_to):
+def get_sales(date_from, date_to):
     def short_date(_date):
         if type(_date) == str:
             _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
@@ -104,24 +104,24 @@ def get_cd(date_from, date_to):
 
     #  Create initial dataframe
     sql = f"""SELECT 
-                cd.id as id,
-                cd.record_date as DATE, 
-                cd.cd_num AS "CD No.", 
-                v.name as NAME, 
-                cd.check_number as "CHECK No.",
-                cd.description as DESCRIPTION
+                sales.id as id,
+                sales.record_date as DATE, 
+                sales.sv_num AS "SV No.", 
+                c.name as NAME, 
+                sales.invoice_num as "CHECK No.",
+                sales.description as DESCRIPTION
             
-            FROM tbl_cd as cd
+            FROM tbl_sales as sales
             
-            INNER JOIN tbl_vendor as v ON cd.vendor_id = v.id
+            INNER JOIN tbl_customer as c ON sales.customer_id = c.id
 
-            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+            WHERE sales.record_date>="{date_from}" AND sales.record_date<="{date_to}"
         ;
         """
-    df_cd = pd.read_sql_query(sql, db)
-    df_cd = df_cd.set_index('id')
+    df_sales = pd.read_sql_query(sql, db)
+    df_sales = df_sales.set_index('id')
 
-    for key, row in df_cd.iterrows():
+    for key, row in df_sales.iterrows():
         row.DATE = short_date(row.DATE)
 
 
@@ -129,12 +129,12 @@ def get_cd(date_from, date_to):
     sql = f"""SELECT 
                 acct.name as account_title
             
-            FROM tbl_cd_entry as entry
+            FROM tbl_sales_entry as entry
             
-            INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
+            INNER JOIN tbl_sales as sales ON entry.sales_id = sales.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
-            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+            WHERE sales.record_date>="{date_from}" AND sales.record_date<="{date_to}"
 
             GROUP BY acct.name
 
@@ -147,20 +147,20 @@ def get_cd(date_from, date_to):
         account_title = row.account_title
         list_accounts.append(account_title.upper())
 
-    for col_name in list_accounts: df_cd[col_name] = ""
+    for col_name in list_accounts: df_sales[col_name] = ""
 
     #  Gather entries and record to proper row and column
     sql = f"""SELECT 
-                cd.id, 
+                sales.id, 
                 acct.name as account_title,
                 (entry.debit-entry.credit) as amount 
             
-            FROM tbl_cd_entry as entry
+            FROM tbl_sales_entry as entry
             
-            INNER JOIN tbl_cd as cd ON entry.cd_id = cd.id
+            INNER JOIN tbl_sales as sales ON entry.sales_id = sales.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
-            WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
+            WHERE sales.record_date>="{date_from}" AND sales.record_date<="{date_to}"
         ;
         """
     df_entry = pd.read_sql_query(sql, db)
@@ -168,9 +168,9 @@ def get_cd(date_from, date_to):
 
     for key, row in df_entry.iterrows():
         account_title, amount = row
-        df_cd.loc[key][account_title.upper()] = amount
+        df_sales.loc[key][account_title.upper()] = amount
 
-    return df_cd
+    return df_sales
 
 
 @dataclass
@@ -195,7 +195,7 @@ class Create_File:
         self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Cash Disbursement Journal.xlsx")
         
 
-        self.df_cd = get_cd(self.date_from, self.date_to)
+        self.df_sales = get_sales(self.date_from, self.date_to)
 
         self.create()
 
@@ -210,7 +210,7 @@ class Create_File:
 
 
     def sheet_transactions(self, wb):
-        sheet_name = "CDJ"
+        sheet_name = "SJ"
         wb["Sheet"].title = sheet_name
         ws = wb[sheet_name]
 
@@ -222,7 +222,7 @@ class Create_File:
 
         row_num += 1
         cell = ws[f'A{row_num}']
-        cell.value = "Cash Disbursement Journal"
+        cell.value = "Sales Journal"
         cell.font = Font(size=12, bold=True)
 
         row_num += 1
@@ -232,7 +232,7 @@ class Create_File:
 
         #  Headers
         row_num += 2
-        column_names = list(self.df_cd.columns)
+        column_names = list(self.df_sales.columns)
         
         width = {
             "A": 11.11,
@@ -260,7 +260,7 @@ class Create_File:
         row_num += 1
         start_row = row_num
         amount_columns = []
-        for key, cd in self.df_cd.iterrows():
+        for key, cd in self.df_sales.iterrows():
             col_num = 1
             
             for x in cd:

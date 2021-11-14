@@ -108,7 +108,7 @@ def get_sales(date_from, date_to):
                 sales.record_date as DATE, 
                 sales.sv_num AS "SV No.", 
                 c.name as NAME, 
-                sales.invoice_num as "CHECK No.",
+                sales.invoice_num as "INVOICE No.",
                 sales.description as DESCRIPTION
             
             FROM tbl_sales as sales

@@ -76,11 +76,35 @@ def load_options():
 	else:
 		g.company_name = company_name
 	
-	if g.get('cd_prepared') is None:
+	if g.get('sales_prepared') is None:
 		opt = Options(db=get_db())
-		opt.get(keyword='cd_prepared')
-		session['cd_prepared'] = opt.value
-		g.cd_prepared = opt.value
+		opt.get(keyword='sales_prepared')
+		session['sales_prepared'] = opt.value
+		g.sales_prepared = opt.value
+
+	if g.get('sales_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_checked')
+		session['sales_checked'] = opt.value
+		g.sales_checked = opt.value
+
+	if g.get('sales_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_audited')
+		session['sales_audited'] = opt.value
+		g.sales_audited = opt.value
+
+	if g.get('sales_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_approved')
+		session['sales_approved'] = opt.value
+		g.sales_approved = opt.value
+
+	if g.get('sales_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_prepared')
+		session['sales_prepared'] = opt.value
+		g.sales_prepared = opt.value
 
 	if g.get('cd_checked') is None:
 		opt = Options(db=get_db())

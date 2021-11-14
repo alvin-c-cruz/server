@@ -48,23 +48,32 @@ def init_db():
 			pass
 
 	#  Default values
-	opt = Options(db=db)
-	opt.delete_table
-	opt.create_table
+	try:
+		opt = Options(db=db)
+		opt.create_table
 	
+	except:
+		pass
+
 	defaults = {
 		'company_name': "Company Name",
+		'sales_prepared': "MGV",
+		'sales_checked': "ATVT",
+		'sales_audited': "",
+		'sales_approved': "LTV",
 		'cd_prepared': "MGV",
 		'cd_checked': "ATVT",
 		'cd_audited': "",
 		'cd_approved': "LTV",
 	}
-	for key, value in defaults.items():
-		opt = Options(db=db)
-		opt.keyword = key
-		opt.value = value
-		opt.save
-	
+	for keyword, value in defaults.items():
+		if not db.execute('SELECT COUNT(*) FROM tbl_options WHERE keyword=?', (keyword,)).fetchone()[0]:
+			opt = Options(db=db)
+			opt.keyword = keyword
+			opt.value = value
+			opt.save
+
+
 	#  TODO: Codes below should be refactored to use sqlite_data_model
 	User(db=db).init_db
 	Account(db=db).init_db

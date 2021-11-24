@@ -64,6 +64,7 @@ def Add():
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
 			cd.vendor_id = int(request.form.get('vendor_id'))
+			cd.check_notes = request.form.get('check_notes')
 			cd.check_number = request.form.get('check_number')
 			cd.description = request.form.get('description')
 
@@ -110,6 +111,7 @@ def Edit(cd_id):
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
 			cd.vendor_id = int(request.form.get('vendor_id'))
+			cd.check_notes = request.form.get('check_notes')
 			cd.check_number = request.form.get('check_number')
 			cd.description = request.form.get('description')
 

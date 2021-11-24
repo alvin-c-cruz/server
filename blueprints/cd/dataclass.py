@@ -17,6 +17,7 @@ class CD(Voucher):
     cd_num: str = ""
     record_date: str = str(date.today())
     vendor_id: int = 0
+    check_notes: str = ""
     check_number: str = ""
     description: str = ""
 

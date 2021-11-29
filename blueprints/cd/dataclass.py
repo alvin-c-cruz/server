@@ -35,6 +35,7 @@ class CD(Voucher):
                     tbl_cd.cd_num,
     				tbl_cd.record_date,
     				tbl_vendor.name as vendor_name,
+                    tbl_cd.check_notes,
                     tbl_cd.check_number,
     				tbl_cd.description
     			FROM tbl_cd
@@ -48,6 +49,7 @@ class CD(Voucher):
     				tbl_cd.id,
     				tbl_cd.cd_num,
                     tbl_cd.record_date,
+                    tbl_cd.check_notes,
                     tbl_cd.check_number,
     				tbl_vendor.name as vendor_name,
     				tbl_cd.description
@@ -65,6 +67,7 @@ class CD(Voucher):
                     tbl_cd.cd_num,
                     tbl_cd.record_date,
                     tbl_vendor.name as vendor_name,
+                    tbl_cd.check_notes,
                     tbl_cd.check_number,
                     tbl_cd.description
                 FROM tbl_cd

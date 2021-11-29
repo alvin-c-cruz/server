@@ -5,3 +5,4 @@ from . import DB
 from . import account
 from . import vendor
 from . import cd
+from . import companyX

@@ -155,3 +155,8 @@ header, main, footer {
 	font-size: 20px;
 }
 
+.companyX {
+	background-image: url("https://www.pinclipart.com/picdir/middle/4-40760_x-mark-symbol-drawings-of-the-letter-x.png");
+	background-repeat: no-repeat;
+  	background-size: 100px 100px;
+}

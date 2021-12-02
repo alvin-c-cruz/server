@@ -23,7 +23,10 @@ def Home():
 	else:
 	    _date = date.today()
 	    date_from = date(_date.year, _date.month, 1)
-	    date_to = date(_date.year, _date.month + 1, 1) - timedelta(days=1)
+	    date_to = date(
+					_date.year if _date.month != 12 else _date.year+1, 
+					_date.month+1 if _date.month != 12 else 1, 
+					1) - timedelta(days=1)
 
 	db = get_db()
 	cds = []

@@ -151,6 +151,10 @@ header, main, footer {
 	color: red;
 }
 
+.font-green {
+	color: green;
+}
+
 .font-size-20 {
 	font-size: 20px;
 }

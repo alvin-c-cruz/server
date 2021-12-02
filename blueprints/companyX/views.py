@@ -7,11 +7,11 @@ from .. DB import get_db
 from .. vendor import Vendor
 from .. account import Account
 
-from .dataclass import CD, Create_File, get_cd
+from .dataclass import CompanyX, Create_File, get_cd
 
 MAX_ROW = 10
 
-bp = Blueprint('cd', __name__, template_folder="pages", url_prefix="/cd")
+bp = Blueprint('companyX', __name__, template_folder="pages", url_prefix="/companyX")
 
 
 @bp.route('/', methods=['POST', 'GET'])
@@ -32,7 +32,7 @@ def Home():
 	cds = []
 
 
-	for cd in CD(db).range(date_from, date_to):
+	for cd in CompanyX(db).range(date_from, date_to):
 		id = cd['id']
 		record_date = date(int(cd['record_date'][:4]), int(cd['record_date'][5:7]), int(cd['record_date'][-2:])).strftime("%d-%b-%Y")
 		cd_num = cd['cd_num']
@@ -49,7 +49,7 @@ def Home():
 				}
 			)
 
-	return render_template('cd/home.html', cds=cds, date_from=date_from, date_to=date_to)
+	return render_template('companyX/home.html', cds=cds, date_from=date_from, date_to=date_to)
 
 
 @bp.route('/add', methods=['POST', 'GET'])
@@ -58,11 +58,11 @@ def Add():
 	db = get_db()
 	vendors = Vendor(db=db).all()
 	accounts = Account(db=db).all()
-	cd = CD(db=db)
+	cd = CompanyX(db=db)
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('cd.Home'))
+			return redirect(url_for('companyX.Home'))
 		else:
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
@@ -83,9 +83,9 @@ def Add():
 			if cd.is_validated():
 				cd.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('cd.Add'))
+					return redirect(url_for('companyX.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('cd.Edit', cd_id=cd.id))
+					return redirect(url_for('companyX.Edit', cd_id=cd.id))
 
 	else:		
 		for i in range(0, MAX_ROW):
@@ -93,7 +93,7 @@ def Add():
 	
 	form = cd
 
-	return render_template('cd/add.html', form=form, vendors=vendors, accounts=accounts)
+	return render_template('companyX/add.html', form=form, vendors=vendors, accounts=accounts)
 
 
 @bp.route('/edit/<int:cd_id>', methods=['POST', 'GET'])
@@ -102,14 +102,14 @@ def Edit(cd_id):
 	db = get_db()
 	vendors = Vendor(db=db).all()
 	accounts = Account(db=db).all()
-	cd = CD(db=db)
+	cd = CompanyX(db=db)
 	cd.get(cd_id)
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('cd.Home'))
+			return redirect(url_for('companyX.Home'))
 		elif request.form.get('cmd_button') == "Print":
-			return redirect(url_for('cd.Print', cd_id=cd_id))
+			return redirect(url_for('companyX.Print', cd_id=cd_id))
 		else:
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
@@ -130,30 +130,30 @@ def Edit(cd_id):
 			if cd.is_validated():
 				cd.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('cd.Add'))
+					return redirect(url_for('companyX.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('cd.Edit', cd_id=cd.id))
+					return redirect(url_for('companyX.Edit', cd_id=cd.id))
 	
 	form = cd
 
-	return render_template('cd/edit.html', form=form, vendors=vendors, accounts=accounts)
+	return render_template('companyX/edit.html', form=form, vendors=vendors, accounts=accounts)
 
 
 @bp.route('/delete/<int:cd_id>')
 @login_required
 def Delete(cd_id):
 	db = get_db()
-	cd = CD(db=db)
+	cd = CompanyX(db=db)
 	cd.get(cd_id)
 	cd.delete()
-	return redirect(url_for('cd.Home'))
+	return redirect(url_for('companyX.Home'))
 
 
 @bp.route('/print/<int:cd_id>')
 @login_required
 def Print(cd_id):
 	db = get_db()
-	cd = CD(db=db)
+	cd = CompanyX(db=db)
 	cd.get(cd_id)
 	_year = int(cd.record_date[:4])
 	_month = int(cd.record_date[5:7])
@@ -174,7 +174,7 @@ def Print(cd_id):
 		else:
 			entry.account_title = ""
 
-	return render_template('cd/print.html', cd=cd)
+	return render_template('companyX/print.html', cd=cd)
 
 
 @bp.route('/download?<date_from>&<date_to>')
@@ -205,6 +205,6 @@ def View(date_from, date_to):
 	cds = cds.fillna('')
 	cds = cds.replace(0, '')
 
-	return render_template('cd/view.html', cds=cds, date_from=date_from, date_to=date_to)
+	return render_template('companyX/view.html', cds=cds, date_from=date_from, date_to=date_to)
 
 

@@ -24,8 +24,8 @@ def Home():
 	    _date = date.today()
 	    date_from = date(_date.year, _date.month, 1)
 	    date_to = date(
-					_date.year if _date.month != 12 else _date.year+1, 
-					_date.month+1 if _date.month != 12 else 1, 
+					_date.year if _date.month != 12 else _date.year+1,
+					_date.month+1 if _date.month != 12 else 1,
 					1) - timedelta(days=1)
 
 	db = get_db()
@@ -44,7 +44,7 @@ def Home():
 				'id': id,
 				'record_date': record_date,
 				'cd_num': cd_num,
-				'vendor_name': vendor_name, 
+				'vendor_name': vendor_name,
 				'check_number': check_number
 				}
 			)
@@ -74,7 +74,7 @@ def Add():
 			for i in range(0, MAX_ROW):
 				i += 1
 				cd.add_entry(
-					i=i, 
+					i=i,
 					account_id=int(request.form.get(f'{i}_account_id')),
 					debit=request.form.get(f'{i}_debit'),
 					credit=request.form.get(f'{i}_credit'),
@@ -87,10 +87,10 @@ def Add():
 				elif request.form.get('cmd_button') == "Save":
 					return redirect(url_for('cd.Edit', cd_id=cd.id))
 
-	else:		
+	else:
 		for i in range(0, MAX_ROW):
 			cd.add_entry(i=i+1)
-	
+
 	form = cd
 
 	return render_template('cd/add.html', form=form, vendors=vendors, accounts=accounts)
@@ -121,7 +121,7 @@ def Edit(cd_id):
 			for i in range(0, MAX_ROW):
 				i += 1
 				cd.update_entry(
-					i, 
+					i,
 					account_id=int(request.form.get(f'{i}_account_id')),
 					debit=request.form.get(f'{i}_debit'),
 					credit=request.form.get(f'{i}_credit'),
@@ -133,7 +133,7 @@ def Edit(cd_id):
 					return redirect(url_for('cd.Add'))
 				elif request.form.get('cmd_button') == "Save":
 					return redirect(url_for('cd.Edit', cd_id=cd.id))
-	
+
 	form = cd
 
 	return render_template('cd/edit.html', form=form, vendors=vendors, accounts=accounts)
@@ -162,7 +162,7 @@ def Print(cd_id):
 	for entry in cd.entry:
 		if entry.account_id != 0:
 			entry.account_title = db.execute(
-					'SELECT name FROM tbl_account WHERE id=?', 
+					'SELECT name FROM tbl_account WHERE id=?',
 					(entry.account_id, )
 				).fetchone()[0]
 
@@ -181,7 +181,7 @@ def Print(cd_id):
 @login_required
 def Download(date_from, date_to):
 	f = Create_File(date_from=date_from, date_to=date_to)
-	
+
 	return send_file('{}'.format(f.filename), as_attachment=True, cache_timeout=0)
 
 
@@ -199,8 +199,8 @@ def View(date_from, date_to):
 			    pd.to_numeric(cds[key],
 			                  errors='coerce')
 			      .fillna(0)
-			    )			
-	
+			    )
+
 	cds = cds.append(cds.sum(numeric_only=True), ignore_index=True)
 	cds = cds.fillna('')
 	cds = cds.replace(0, '')

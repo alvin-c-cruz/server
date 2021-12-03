@@ -14,7 +14,7 @@ body {
     /* The column value stacks the flex items vertically (from top to bottom) */
     display: flex;
     flex-direction: column;
-}  
+}
 
 .justify-left {
     justify-content: flex-start;
@@ -197,6 +197,10 @@ body {
 /* Font */
 .font-16 {
     font-size: 16px;
+}
+
+.font-32 {
+    font-size: 32px;
 }
 
 .font-red {

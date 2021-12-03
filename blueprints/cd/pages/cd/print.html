@@ -7,65 +7,65 @@
 <div class="container">
     <header>
         <div class="flex-row justify-center">
-            <h3>{{g.company_name.upper()}}</h3>    
+            <h3>{{g.company_name.upper()}}</h3>
         </div>
 
         <div class="flex-row justify-center">
             <div class="flex-1"></div>
             <div class="flex-row flex-1 justify-center">
-                <h4><u>CASH VOUCHER</u></h4>
-            </div>            
+                <h4><u class="font-size-32">CHECK VOUCHER</u></h4>
+            </div>
             <div class="flex-row flex-1 justify-center">
                 <div class="flex-row justify-center align-center">
                     <label>No.</label>
-                    <span><strong class="font-red font-size-20">{{cd.cd_num}}</strong></span>                    
+                    <span><strong class="font-red font-size-20">{{cd.cd_num}}</strong></span>
                 </div>
             </div>
         </div>
-        
+
         <div class="flex-row justify-center">
             <div class="flex-row flex-3">
                 <div class="flex-row flex-1 align-center">
-                    <label>PAID TO: </label>                     
+                    <label>PAID TO: </label>
                 </div>
                 <div class="flex-row flex-3 align-center border-bottom">
-                    <span class="flex-shrink">{{cd.vendor_name}}</span>                       
+                    <span class="flex-shrink">{{cd.vendor_name}}</span>
                 </div>
             </div>
             <div class="flex-row flex-2">
                 <div class="flex-row flex-1 justify-end">
-                    <label>DATE: </label>                    
+                    <label>DATE: </label>
                 </div>
                 <div class="flex-row flex-2 justify-center border-bottom">
-                    <span>{{cd.record_date}}</span>                    
+                    <span>{{cd.record_date}}</span>
                 </div>
-            </div>             
+            </div>
         </div>
-        
+
         <div class="flex-row">
             <div class="flex-row flex-3">
                 <div class="flex-row flex-1 align-center">
-                                       
+
                 </div>
                 <div class="flex-row flex-3 align-center border-bottom">
-                    <span class="flex-shrink">{{cd.check_notes}}</span>                       
-                </div>                
+                    <span class="flex-shrink">{{cd.check_notes}}</span>
+                </div>
             </div>
             <div class="flex-row flex-2">
                 <div class="flex-row flex-1 justify-end">
-                    <label>CHECK NO.: </label>                   
+                    <label>CHECK NO.: </label>
                 </div>
                 <div class="flex-row flex-2 justify-center border-bottom">
-                    <span>{{cd.check_number}}</span>                    
+                    <span>{{cd.check_number}}</span>
                 </div>
-            </div>             
+            </div>
         </div>
     </header>
-    <main class="flex-column justify-center bordered margin-top-10">  
+    <main class="flex-column justify-center bordered margin-top-10">
         <div class="flex-row justify-center">
             <label class="flex-row flex-4 justify-center height-15 line-bordered border-bottom"><strong>ACCOUNT TITLE</strong></label>
             <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>DEBIT</strong></label>
-            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>CREDIT</strong></label>            
+            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>CREDIT</strong></label>
         </div>
 
         {% for entry in cd.entry %}
@@ -76,9 +76,9 @@
             <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-50">{{entry.account_title}}</span></label>
             {% endif %}
             <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.debit %}{{entry.debit}}{% endif %}</span></label>
-            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.credit %}{{entry.credit}}{% endif %}</span></label>     
+            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.credit %}{{entry.credit}}{% endif %}</span></label>
         </div>
-        {% endfor %}                    
+        {% endfor %}
     </main>
 
     <footer class="flex-column">

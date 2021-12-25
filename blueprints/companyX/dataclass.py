@@ -1,5 +1,5 @@
 from flask import flash, current_app, session, g
-from datetime import date
+from datetime import date, datetime, timezone, timedelta
 from dataclasses import dataclass
 import os
 import pandas as pd
@@ -15,7 +15,7 @@ from ... packages import Voucher
 @dataclass
 class CompanyX(Voucher):
     cd_num: str = ""
-    record_date: str = str(date.today())
+    record_date: str = str(datetime.now(timezone(timedelta(hours=8))))[:10]
     vendor_id: int = 0
     check_notes: str = ""
     check_number: str = ""
@@ -23,14 +23,14 @@ class CompanyX(Voucher):
 
     @property
     def vendor_name(self):
-    	return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]	
-		
+    	return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]
+
 
     def all(self, **filter):
     	if filter:
     		clause = [f'{key}=?' for key in filter]
     		sql = f"""
-    			SELECT 
+    			SELECT
     				tbl_companyx.id,
                     tbl_companyx.cd_num,
     				tbl_companyx.record_date,
@@ -45,7 +45,7 @@ class CompanyX(Voucher):
     		return self.db.execute(sql, tuple(filter.values)).fetchall()
     	else:
     		sql = f"""
-    			SELECT 
+    			SELECT
     				tbl_companyx.id,
     				tbl_companyx.cd_num,
                     tbl_companyx.record_date,
@@ -62,7 +62,7 @@ class CompanyX(Voucher):
     def range(self, date_from, date_to):
         if True:
             sql = f"""
-                SELECT 
+                SELECT
                     tbl_companyx.id,
                     tbl_companyx.cd_num,
                     tbl_companyx.record_date,
@@ -92,7 +92,7 @@ class CompanyX(Voucher):
             if self.db.execute('SELECT COUNT(*) FROM tbl_companyx WHERE check_number=?;', (self.check_number, )).fetchone()[0]:
                 flash("Check Number is already in use.")
                 return False
-                
+
         return True
 
 
@@ -103,20 +103,20 @@ def get_cd(date_from, date_to):
 
         return _date.strftime("%d-%b-%Y")
 
-    #  Open model        
+    #  Open model
     db = get_db()
 
     #  Create initial dataframe
-    sql = f"""SELECT 
+    sql = f"""SELECT
                 cd.id as id,
-                cd.record_date as DATE, 
-                cd.cd_num AS "CD No.", 
-                v.name as NAME, 
+                cd.record_date as DATE,
+                cd.cd_num AS "CD No.",
+                v.name as NAME,
                 cd.check_number as "CHECK No.",
                 cd.description as DESCRIPTION
-            
+
             FROM tbl_companyx as cd
-            
+
             INNER JOIN tbl_vendor as v ON cd.vendor_id = v.id
 
             WHERE cd.record_date>="{date_from}" AND cd.record_date<="{date_to}"
@@ -130,11 +130,11 @@ def get_cd(date_from, date_to):
 
 
     #  Collect account titles and add to main dataframe
-    sql = f"""SELECT 
+    sql = f"""SELECT
                 acct.name as account_title
-            
+
             FROM tbl_companyx_entry as entry
-            
+
             INNER JOIN tbl_companyx as cd ON entry.companyx_id = cd.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
@@ -154,13 +154,13 @@ def get_cd(date_from, date_to):
     for col_name in list_accounts: df_cd[col_name] = ""
 
     #  Gather entries and record to proper row and column
-    sql = f"""SELECT 
-                cd.id, 
+    sql = f"""SELECT
+                cd.id,
                 acct.name as account_title,
-                (entry.debit-entry.credit) as amount 
-            
+                (entry.debit-entry.credit) as amount
+
             FROM tbl_companyx_entry as entry
-            
+
             INNER JOIN tbl_companyx as cd ON entry.companyx_id = cd.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
@@ -197,7 +197,7 @@ class Create_File:
 
         #  Downloaded filename
         self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Cash Disbursement Journal.xlsx")
-        
+
 
         self.df_cd = get_cd(self.date_from, self.date_to)
 
@@ -237,7 +237,7 @@ class Create_File:
         #  Headers
         row_num += 2
         column_names = list(self.df_cd.columns)
-        
+
         width = {
             "A": 11.11,
             "B": 9.11,
@@ -245,7 +245,7 @@ class Create_File:
             "D": 9.11,
             "E": 30.0,
         }
-            
+
 
         col_num = 1
         for col_name in column_names:
@@ -266,7 +266,7 @@ class Create_File:
         amount_columns = []
         for key, cd in self.df_cd.iterrows():
             col_num = 1
-            
+
             for x in cd:
                 col_letter = get_column_letter(col_num)
                 cell = ws[f'{col_letter}{row_num}']
@@ -275,21 +275,21 @@ class Create_File:
                 if col_letter in ("A", "B", "D"): cell.alignment = Alignment(horizontal='center')
                 if col_letter in ("B", "D"): cell.number_format = "@"
 
-                if col_num not in (1, 2, 3, 4, 5): 
+                if col_num not in (1, 2, 3, 4, 5):
                     amount_columns.append(col_letter)
                     cell.number_format = "#,##0.00_);(#,##0.00)"
                 col_num += 1
-            
+
             row_num += 1
-        
+
         end_row = row_num
 
         #  Total
         row_num += 1
         cell = ws[f'A{row_num}']
         cell.value = "TOTAL"
-        
-        for col in ("A", "B", "C", "D", "E"): 
+
+        for col in ("A", "B", "C", "D", "E"):
             cell = ws[f'{col}{row_num}']
             cell.font = Font(bold=True)
             cell.border = self.double_rule

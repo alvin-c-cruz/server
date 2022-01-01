@@ -36,38 +36,53 @@ def init_db():
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..cd import CD
-	from ..companyX import CompanyX
+	from ..x_cd import XCD
 
-	#  This structure uses sqlite_data_model
-	# models = [Options]
-	# for model in models:
-	# 	try:
-	# 		model(db=db).delete_table
-	# 		model(db=db).create_table
-	# 	except:
-	# 		pass
-
-	#  Default values
-	# defaults = {
-	# 	'company_name': "Company Name",
-	# 	'cd_prepared': "MGV",
-	# 	'cd_checked': "ATVT",
-	# 	'cd_audited': "",
-	# 	'cd_approved': "LTV",
-	# }
-
-	# for key, value in defaults.items():
-	# 	opt = Options(db=db)
-	# 	opt.keyword = key
-	# 	opt.value = value
-	# 	opt.save
+	# This structure uses sqlite_data_model
+	models = [Options]
+	for model in models:
+		try:
+			model(db=db).delete_table
+			model(db=db).create_table
+		except:
+			pass
 	
-	#  TODO: Codes below should be refactored to use sqlite_data_model
-	# User(db=db).init_db
-	# Account(db=db).init_db
-	# Vendor(db=db).init_db
-	# CD(db=db).init_db
-	CompanyX(db=db).init_db
+	# TODO: Codes below should be refactored to use sqlite_data_model
+	User(db=db).init_db
+	Account(db=db).init_db
+	Vendor(db=db).init_db
+	CD(db=db).init_db
+	XCD(db=db).init_db
+
+	defaults(db=db, company="wingain")
+
+
+def defaults(db, company):
+	#  Company options
+	from ..options import Options
+	if company == "wingain":
+		company_options = {
+			'company_name': "WINGAIN CORPORATION",
+			'cd_prepared': "MGV",
+			'cd_checked': "ATVT",
+			'cd_audited': "",
+			'cd_approved': "ACV",
+		}
+
+	for key, value in company_options.items():
+		opt = Options(db=db)
+		opt.keyword = key
+		opt.value = value
+		opt.save
+
+
+	#  Users
+	from ..auth import User
+	if company == "wingain":
+		users = {
+
+		}
+
 
 
 @click.command('init-db')

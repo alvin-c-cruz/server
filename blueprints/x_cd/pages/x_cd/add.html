@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import select_field, amount %}
+
+{% block content %}
+    <h1>New X Disbursement</h1>
+
+    <form method="post" action="{{url_for('x_cd.Add')}}" class="flex-column">
+        {{csrf_token}}
+        <table>
+            <tr>
+                <td>
+                    <label for="record_date">Date</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="date" class="flex-1 align-items-stretch font-16" name="record_date" value="{{form['record_date']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="cd_num">CD No.</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="cd_num" value="{{form['cd_num']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="vendor_id">Vendor</label>
+                </td> 
+                <td class="flex height-50">
+                    {{select_field('vendor_id', vendors, form['vendor_id'])}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="check_notes">Check Notes</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="check_notes" value="{{form['check_notes']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="check_number">Check No.</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="check_number" value="{{form['check_number']}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="description">Description</label>
+                </td> 
+                <td class="flex height-50">
+                    <input type="text" class="flex-1 align-items-stretch font-16" name="description" value="{{form['description']}}">
+                </td>
+            </tr>
+        </table>
+
+        <table>
+        	<tr class="flex">
+        		<th class="flex flex-4"><span>Account Title</span></th>
+        		<th class="flex-1 text-center"><span>Debit</span></th>
+        		<th class="flex-1 text-center">Credit</th>
+        	</tr>
+        	{% for entry in form['entry'] %}
+        	<tr class="flex">
+        		<td class="flex flex-4">{{select_field('account_id', accounts, entry.account_id, entry.i)}}</td>
+                <td class="flex flex-1">{{amount('debit', entry.debit, entry.i)}}</td>
+                <td class="flex flex-1">{{amount('credit', entry.credit, entry.i)}}</td>
+        	</tr>
+        	{% endfor %}	
+        </table>
+
+        <div class="flex flex-1 justify-center gap-20 height-50">
+            <input type="submit" class="button width-125" value="Save" name="cmd_button">
+            <input type="submit" class="button width-125" value="Save and New" name="cmd_button">
+            <input type="submit" class="button width-125" value="Back" name="cmd_button">
+        </div>
+</form>
+{% endblock %}
+
+description

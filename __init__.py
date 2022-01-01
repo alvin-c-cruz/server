@@ -37,7 +37,7 @@ def create_app(test_mode=False):
 		blueprints.account,
 		blueprints.vendor,
 		blueprints.cd,
-		blueprints.companyX,
+		blueprints.x_cd,
 	]
 	for view in views:
 		app.register_blueprint(view.bp)

@@ -67,6 +67,9 @@ def load_options():
 	from .. options import Options
 	company_name = session.get('company_name')
 
+	if current_app.config['TEST_MODE'] == True:
+		session['user_id'] = 1
+
 	if company_name is None:
 		opt = Options(db=get_db())
 		opt.get(keyword="company_name")

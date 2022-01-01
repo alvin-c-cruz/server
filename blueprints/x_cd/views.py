@@ -7,7 +7,7 @@ from .. DB import get_db
 from .. vendor import Vendor
 from .. account import Account
 
-from .dataclass import XCD, Create_File, get_cd
+from .dataclass import X_CD, Create_File, get_cd
 
 MAX_ROW = 10
 
@@ -21,18 +21,18 @@ def Home():
 		date_from = request.form.get('date_from')
 		date_to = request.form.get('date_to')
 	else:
-	    _date = date.today()
-	    date_from = date(_date.year, _date.month, 1)
-	    date_to = date(
-					_date.year if _date.month != 12 else _date.year+1, 
-					_date.month+1 if _date.month != 12 else 1, 
-					1) - timedelta(days=1)
+		_date = date.today()
+		date_from = date(_date.year, _date.month, 1)
+		date_to = date(
+			_date.year if _date.month != 12 else _date.year+1, 
+			_date.month+1 if _date.month != 12 else 1, 
+			1) - timedelta(days=1)
 
 	db = get_db()
 	cds = []
 
 
-	for cd in XCD(db).range(date_from, date_to):
+	for cd in X_CD(db).range(date_from, date_to):
 		id = cd['id']
 		record_date = date(int(cd['record_date'][:4]), int(cd['record_date'][5:7]), int(cd['record_date'][-2:])).strftime("%d-%b-%Y")
 		cd_num = cd['cd_num']
@@ -58,7 +58,7 @@ def Add():
 	db = get_db()
 	vendors = Vendor(db=db).all()
 	accounts = Account(db=db).all()
-	cd = XCD(db=db)
+	cd = X_CD(db=db)
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
@@ -102,7 +102,7 @@ def Edit(cd_id):
 	db = get_db()
 	vendors = Vendor(db=db).all()
 	accounts = Account(db=db).all()
-	cd = XCD(db=db)
+	cd = X_CD(db=db)
 	cd.get(cd_id)
 
 	if request.method == 'POST':
@@ -143,7 +143,7 @@ def Edit(cd_id):
 @login_required
 def Delete(cd_id):
 	db = get_db()
-	cd = XCD(db=db)
+	cd = X_CD(db=db)
 	cd.get(cd_id)
 	cd.delete()
 	return redirect(url_for('x_cd.Home'))
@@ -153,7 +153,7 @@ def Delete(cd_id):
 @login_required
 def Print(cd_id):
 	db = get_db()
-	cd = XCD(db=db)
+	cd = X_CD(db=db)
 	cd.get(cd_id)
 	_year = int(cd.record_date[:4])
 	_month = int(cd.record_date[5:7])

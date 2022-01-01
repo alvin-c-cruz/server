@@ -13,7 +13,7 @@ from .. DB import get_db
 from ... packages import Voucher
 
 @dataclass
-class XCD(Voucher):
+class X_CD(Voucher):
     cd_num: str = ""
     record_date: str = str(datetime.now(timezone(timedelta(hours=8))))[:10]
     vendor_id: int = 0
@@ -21,42 +21,43 @@ class XCD(Voucher):
     check_number: str = ""
     description: str = ""
 
+    table_name: str = "tbl_x_cd"
+
     @property
     def vendor_name(self):
-    	return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]
-
-
+        return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]
+    
     def all(self, **filter):
-    	if filter:
-    		clause = [f'{key}=?' for key in filter]
-    		sql = f"""
-    			SELECT
-    				tbl_x_cd.id,
-                    tbl_x_cd.cd_num,
-    				tbl_x_cd.record_date,
-    				tbl_vendor.name as vendor_name,
-                    tbl_x_cd.check_notes,
-                    tbl_x_cd.check_number,
-    				tbl_x_cd.description
-    			FROM tbl_x_cd
-    			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_x_cd.vendor_id
-    			WHERE {", ".join(clause)}
-    		"""
-    		return self.db.execute(sql, tuple(filter.values)).fetchall()
-    	else:
-    		sql = f"""
-    			SELECT
-    				tbl_x_cd.id,
-    				tbl_x_cd.cd_num,
-                    tbl_x_cd.record_date,
-                    tbl_x_cd.check_notes,
-                    tbl_x_cd.check_number,
-    				tbl_vendor.name as vendor_name,
-    				tbl_x_cd.description
-    			FROM tbl_x_cd
-    			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_x_cd.vendor_id
-    		"""
-    		return self.db.execute(sql).fetchall()
+        if filter:
+            clause = [f'{key}=?' for key in filter]
+            sql = f"""
+                SELECT
+                tbl_x_cd.id,
+                tbl_x_cd.cd_num,
+                tbl_x_cd.record_date,
+                tbl_vendor.name as vendor_name,
+                tbl_x_cd.check_notes,
+                tbl_x_cd.check_number,
+                tbl_x_cd.description
+                FROM tbl_x_cd
+                INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_x_cd.vendor_id
+                WHERE {", ".join(clause)}
+                """
+            return self.db.execute(sql, tuple(filter.values)).fetchall()
+        else:
+            sql = f"""
+                SELECT
+                tbl_x_cd.id,
+                tbl_x_cd.cd_num,
+                tbl_x_cd.record_date,
+                tbl_x_cd.check_notes,
+                tbl_x_cd.check_number,
+                tbl_vendor.name as vendor_name,
+                tbl_x_cd.description
+                FROM tbl_x_cd
+                INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_x_cd.vendor_id
+                """
+            return self.db.execute(sql).fetchall()
 
 
     def range(self, date_from, date_to):

@@ -26,7 +26,7 @@ def Login():
 		if not db.execute('SELECT username FROM tbl_user WHERE username=?;', (username, )).fetchone():
 			error = "User is not registered"
 		else:
-			user.get(db.execute('SELECT id FROM tbl_user WHERE username=?;', (username, )).fetchone()[0])
+			user.get(username=username)
 
 			if not check_password_hash(user.password, password):
 				error = "Invalid password"
@@ -57,7 +57,7 @@ def load_logged_in_user():
 		from .. DB import get_db
 		from .dataclass import User
 		user = User(get_db())
-		user.get(user_id)
+		user.get(id=user_id)
 		g.user = user
 
 

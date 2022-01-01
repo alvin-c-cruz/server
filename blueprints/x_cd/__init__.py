@@ -1,2 +1,2 @@
 from .views import bp
-from .dataclass import XCD
+from .dataclass import X_CD

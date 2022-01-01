@@ -18,14 +18,14 @@
 {% macro line_entry(field_name, field_label, field_value) %}
 	<div class="flex padding-20">
 		<label class="width-25p">{{field_label}}</label>
-		<input type="text" name="{{field_name}}" value="{{field_value}}" class="width-75p">
+		<input type="text" name="{{field_name}}" value="{{field_value}}" class="width-75p" autocomplete="off">
 	</div>
 {% endmacro %}
 
 {% macro amount(field_name, number,i=None) %}
 	{% if i %}
-	<input type="text" name="{{i}}_{{field_name}}" value="{{number}}" class="flex-1">
+	<input type="text" name="{{i}}_{{field_name}}" value="{{number}}" class="flex-1" autocomplete="off">
 	{% else %}
-	<input type="text" name="{{field_name}}" value="{{number}}" class="flex-1">
+	<input type="text" name="{{field_name}}" value="{{number}}" class="flex-1" autocomplete="off">
 	{% endif %}
 {% endmacro %}

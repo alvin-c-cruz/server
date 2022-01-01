@@ -37,7 +37,7 @@ class Voucher:
 
 	@property
 	def init_db(self):
-		# self.delete_table
+		self.delete_table
 		try:
 			self.create_table
 			return f"{self.table_name} and {self.entry_table_name} has been initialized."

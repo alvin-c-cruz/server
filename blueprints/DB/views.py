@@ -36,7 +36,7 @@ def init_db():
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..cd import CD
-	from ..x_cd import XCD
+	from ..x_cd import X_CD
 
 	# This structure uses sqlite_data_model
 	models = [Options]
@@ -52,7 +52,7 @@ def init_db():
 	Account(db=db).init_db
 	Vendor(db=db).init_db
 	CD(db=db).init_db
-	XCD(db=db).init_db
+	X_CD(db=db).init_db
 
 	defaults(db=db, company="wingain")
 
@@ -79,11 +79,30 @@ def defaults(db, company):
 	#  Users
 	from ..auth import User
 	if company == "wingain":
-		users = {
+		users = [
+			{
+				"username": "alvin",
+				"email": "alvinccruz12@gmail.com",
+				"password": "pbkdf2:sha256:260000$m9hok4g9tJLeQpdK$388a29d922597c53a86749f3800d93a654f823772e86fe6e7d4d771ae35ea8b6",
+				"level": 1 #  Levels: 1=admin; 2=audit; 3=accountant; 4=bookkeeper; 5=viewer
+			},
+			{
+				"username": "maris",
+				"email": "marisvalencia0115@yahoo.com.ph",
+				"password": "pbkdf2:sha256:260000$S7N4NmQcLhjsv3KJ$3efa095533d6a117a6c4777d19a55f4a146d2a425c67fb2205ff695de66d71fe",
+				"level": 3 #  Levels: 1=admin; 2=audit; 3=accountant; 4=bookkeeper; 5=viewer
+			},
+		]
 
-		}
-
-
+	for user in users:
+		obj_user = User(
+			db=db,
+			username=user["username"],
+			email=user["email"],
+			password=user["password"],
+			level=user["level"]
+		)
+		obj_user.save
 
 @click.command('init-db')
 @with_appcontext

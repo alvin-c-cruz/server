@@ -62,7 +62,7 @@ def Add():
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('companyX.Home'))
+			return redirect(url_for('x_cd.Home'))
 		else:
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
@@ -83,9 +83,9 @@ def Add():
 			if cd.is_validated():
 				cd.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('companyX.Add'))
+					return redirect(url_for('x_cd.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('companyX.Edit', cd_id=cd.id))
+					return redirect(url_for('x_cd.Edit', cd_id=cd.id))
 
 	else:		
 		for i in range(0, MAX_ROW):
@@ -107,9 +107,9 @@ def Edit(cd_id):
 
 	if request.method == 'POST':
 		if request.form.get('cmd_button') == "Back":
-			return redirect(url_for('companyX.Home'))
+			return redirect(url_for('x_cd.Home'))
 		elif request.form.get('cmd_button') == "Print":
-			return redirect(url_for('companyX.Print', cd_id=cd_id))
+			return redirect(url_for('x_cd.Print', cd_id=cd_id))
 		else:
 			cd.cd_num = request.form.get('cd_num')
 			cd.record_date = str(request.form.get('record_date'))[:10]
@@ -130,9 +130,9 @@ def Edit(cd_id):
 			if cd.is_validated():
 				cd.save()
 				if request.form.get('cmd_button') == "Save and New":
-					return redirect(url_for('companyX.Add'))
+					return redirect(url_for('x_cd.Add'))
 				elif request.form.get('cmd_button') == "Save":
-					return redirect(url_for('companyX.Edit', cd_id=cd.id))
+					return redirect(url_for('x_cd.Edit', cd_id=cd.id))
 	
 	form = cd
 

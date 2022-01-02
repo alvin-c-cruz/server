@@ -31,12 +31,17 @@ def create_app(test_mode=False):
 
 	views = [
 		blueprints.options,
-		blueprints.home_page,
 		blueprints.auth,
 		blueprints.DB,
+
 		blueprints.account,
 		blueprints.vendor,
+
+		blueprints.home_page,
 		blueprints.cd,
+		blueprints.ap,
+
+		blueprints.x_home_page,
 		blueprints.x_cd,
 	]
 	for view in views:

@@ -32,7 +32,8 @@ def Add():
 				db=db, 
 				account_number=form['account_number'], 
 				name=form['name']
-				).save()
+				)
+			account.save
 			flash(f"{form['account_number']}: {form['name']} has been saved.")
 
 			if form['cmd_button'] == 'Save':
@@ -64,13 +65,13 @@ def Edit(account_id):
 		if error:
 			flash(error)
 		else:
-			account.save()
+			account.save
 			flash(f"{form['account_number']}: {form['name']} has been saved.")
 
 			return redirect(url_for('account.Home'))
 		
 	else:
-		account.get(account_id)
+		account.get(id=account_id)
 
 
 	return render_template('account/edit.html', account=account, account_id=account_id)
@@ -107,9 +108,9 @@ def Validate(form, account_id=None):
 def Delete(account_id):
 	db = get_db()
 	account = Account(db=db)
-	account.get(account_id)
+	account.get(id=account_id)
 
-	error = account.delete()
+	error = account.delete
 
 	if error:
 		flash(f"{account.name} has related record(s) and cannot be deleted.")

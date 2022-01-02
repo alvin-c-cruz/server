@@ -79,6 +79,7 @@ def load_options():
 	else:
 		g.company_name = company_name
 	
+	#  CD signatories
 	if g.get('cd_prepared') is None:
 		opt = Options(db=get_db())
 		opt.get(keyword='cd_prepared')
@@ -102,6 +103,31 @@ def load_options():
 		opt.get(keyword='cd_approved')
 		session['cd_approved'] = opt.value
 		g.cd_approved = opt.value
+
+	#  AP Signatories
+	if g.get('ap_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='ap_prepared')
+		session['ap_prepared'] = opt.value
+		g.ap_prepared = opt.value
+
+	if g.get('ap_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='ap_checked')
+		session['ap_checked'] = opt.value
+		g.ap_checked = opt.value
+
+	if g.get('ap_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='ap_audited')
+		session['ap_audited'] = opt.value
+		g.ap_audited = opt.value
+
+	if g.get('ap_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='ap_approved')
+		session['ap_approved'] = opt.value
+		g.ap_approved = opt.value
 
 
 	

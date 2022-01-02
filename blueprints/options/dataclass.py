@@ -5,3 +5,8 @@ from dataclasses import dataclass
 class Options(sqliteDataModel):
     keyword: str = ""
     value: str = ""
+
+    @property
+    def init_db(self):
+        self.delete_table
+        self.create_table

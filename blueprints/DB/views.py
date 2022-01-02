@@ -1,5 +1,6 @@
-from flask import Blueprint, session, g, render_template, redirect, url_for, flash
-from flask import current_app
+from flask import Blueprint, session, g, render_template, redirect, url_for, flash, current_app
+import pandas as pd
+import os
 
 import sqlite3
 import click
@@ -9,7 +10,7 @@ from werkzeug.security import generate_password_hash
 
 from .. auth import login_required
 
-bp = Blueprint('db', __name__, template_folder='pages')
+bp = Blueprint('db', __name__, template_folder='pages', url_prefix='/db')
 
 def get_db():
 	db = sqlite3.connect(
@@ -36,22 +37,22 @@ def init_db():
 	from ..account import Account
 	from ..vendor import Vendor
 	from ..cd import CD
+	from ..ap import AP
+
 	from ..x_cd import X_CD
 
 	# This structure uses sqlite_data_model
-	models = [Options]
+	models = [User, Options, Account, Vendor,]
 	for model in models:
 		try:
-			model(db=db).delete_table
-			model(db=db).create_table
+			model(db=db).init_db
 		except:
 			pass
 	
 	# TODO: Codes below should be refactored to use sqlite_data_model
-	User(db=db).init_db
-	Account(db=db).init_db
-	Vendor(db=db).init_db
 	CD(db=db).init_db
+	AP(db=db).init_db
+
 	X_CD(db=db).init_db
 
 	defaults(db=db, company="wingain")
@@ -60,16 +61,12 @@ def init_db():
 def defaults(db, company):
 	#  Company options
 	from ..options import Options
-	if company == "wingain":
-		company_options = {
-			'company_name': "WINGAIN CORPORATION",
-			'cd_prepared': "MGV",
-			'cd_checked': "ATVT",
-			'cd_audited': "",
-			'cd_approved': "ACV",
-		}
 
-	for key, value in company_options.items():
+	company_options = pd.read_csv(os.path.join(current_app.instance_path, 'db_default', company, 'options.csv'))
+	company_options.fillna("", inplace=True)
+
+	for i, row in company_options.iterrows():
+		key, value = row
 		opt = Options(db=db)
 		opt.keyword = key
 		opt.value = value
@@ -78,23 +75,9 @@ def defaults(db, company):
 
 	#  Users
 	from ..auth import User
-	if company == "wingain":
-		users = [
-			{
-				"username": "alvin",
-				"email": "alvinccruz12@gmail.com",
-				"password": "pbkdf2:sha256:260000$m9hok4g9tJLeQpdK$388a29d922597c53a86749f3800d93a654f823772e86fe6e7d4d771ae35ea8b6",
-				"level": 1 #  Levels: 1=admin; 2=audit; 3=accountant; 4=bookkeeper; 5=viewer
-			},
-			{
-				"username": "maris",
-				"email": "marisvalencia0115@yahoo.com.ph",
-				"password": "pbkdf2:sha256:260000$S7N4NmQcLhjsv3KJ$3efa095533d6a117a6c4777d19a55f4a146d2a425c67fb2205ff695de66d71fe",
-				"level": 3 #  Levels: 1=admin; 2=audit; 3=accountant; 4=bookkeeper; 5=viewer
-			},
-		]
+	users = pd.read_csv(os.path.join(current_app.instance_path, 'db_default', company, 'users.csv'))
 
-	for user in users:
+	for i, user in users.iterrows():
 		obj_user = User(
 			db=db,
 			username=user["username"],
@@ -103,6 +86,35 @@ def defaults(db, company):
 			level=user["level"]
 		)
 		obj_user.save
+
+
+	#  Accounts
+	from ..account import Account
+	accounts = pd.read_csv(os.path.join(current_app.instance_path, 'db_default', company, 'accounts.csv'))
+
+	for i, row in accounts.iterrows():
+		account = Account(
+			db=db,
+			account_number=row["account_number"],
+			name=row["name"]
+		)
+		account.save
+
+
+	#  Vendors
+	from ..vendor import Vendor
+	vendors = pd.read_csv(os.path.join(current_app.instance_path, 'db_default', company, 'vendors.csv'))
+	vendors.fillna("", inplace=True)
+
+	for i, row in vendors.iterrows():
+		vendor = Vendor(
+			db=db,
+			name=row["name"],
+			tin=row["tin"],
+			address=row["address"]
+		)
+		vendor.save
+
 
 @click.command('init-db')
 @with_appcontext

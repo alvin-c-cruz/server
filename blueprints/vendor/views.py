@@ -33,7 +33,8 @@ def Add():
 				name=form['name'], 
 				tin=form['tin'],
 				address=form['address']
-				).save()
+				)
+			vendor.save
 			flash(f"{form['name']} has been saved.")
 
 			if form['cmd_button'] == 'Save':
@@ -66,13 +67,13 @@ def Edit(vendor_id):
 		if error:
 			flash(error)
 		else:
-			vendor.save()
+			vendor.save
 			flash(f"{form['name']} has been saved.")
 
 			return redirect(url_for('vendor.Home'))
 		
 	else:
-		vendor.get(vendor_id)
+		vendor.get(id=vendor_id)
 
 
 	return render_template('vendor/edit.html', vendor=vendor, vendor_id=vendor_id)
@@ -99,9 +100,9 @@ def Validate(form, vendor_id=None):
 def Delete(vendor_id):
 	db = get_db()
 	vendor = Vendor(db=db)
-	vendor.get(vendor_id)
+	vendor.get(id=vendor_id)
 
-	error = vendor.delete()
+	error = vendor.delete
 
 	if error:
 		flash(f"{vendor.name} has related record(s) and cannot be deleted.")

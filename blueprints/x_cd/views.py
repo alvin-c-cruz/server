@@ -11,7 +11,7 @@ from .dataclass import X_CD, Create_File, get_cd
 
 MAX_ROW = 10
 
-bp = Blueprint('x_cd', __name__, template_folder="pages", url_prefix="/x_cd")
+bp = Blueprint('x_cd', __name__, template_folder="pages", url_prefix="/x/x_cd")
 
 
 @bp.route('/', methods=['POST', 'GET'])

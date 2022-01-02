@@ -43,6 +43,7 @@ def init_db():
 	from ..cr import CR
 	from ..cd import CD
 	from ..ap import AP
+	from ..gj import GJ
 
 	from ..x_cd import X_CD
 
@@ -59,6 +60,7 @@ def init_db():
 	CR(db=db).init_db
 	CD(db=db).init_db
 	AP(db=db).init_db
+	GJ(db=db).init_db
 
 	X_CD(db=db).init_db
 

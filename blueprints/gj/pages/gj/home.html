@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex">
+        <h1>Journal Voucher</h1>
+        <a href="{{url_for('gj.Add')}}" class="button align-right">New Journal Voucher</a>
+    </div>
+
+    <form method="post" action="{{url_for('gj.Home')}}">
+        {{csrf_token}}
+        <div class="flex gap-20">
+            <label class="flex align-items-center">From</label>
+            <input type="date" name="date_from" value="{{date_from}}">
+            <label class="flex align-items-center">To</label>
+            <input type="date" name="date_to" value="{{date_to}}">
+            <input type="submit" value="Refresh" class="button">
+            <a href="{{url_for('gj.Download', date_from=date_from, date_to=date_to)}}" class="button">Download</a>
+            <a href="{{url_for('gj.View', date_from=date_from, date_to=date_to)}}" target="_blank" class="button">View</a>
+        </div>        
+    </form>
+
+    <table class="bordered-thick">
+        <tr class="height-50">
+            <th class="bordered-thick">
+                Date
+            </th> 
+            <th class="bordered-thick">
+                JV No.
+            </th> 
+            <th class="bordered-thick">
+                Description
+            </th>
+            <th class="bordered-thick">
+                Actions
+            </th>
+        </tr>
+
+        {% if gjs %}
+            {% for gj in gjs %}
+        <tr class="height-50">
+            <td class="bordered-thick">
+                {{gj['record_date']}}
+            </td> 
+            <td class="bordered-thick">
+                {{gj['gj_num']}}
+            </td> 
+            <td class="bordered-thick">
+                {{gj['description']}}
+            </td>
+            <td class="bordered-thick">
+                <a href="{{url_for('gj.Edit', gj_id=gj['id'])}}" class="button">Edit</a>
+                <a href="{{url_for('gj.Delete', gj_id=gj['id'])}}" class="button" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('gj.Print', gj_id=gj['id'])}}" class="button" target="_blank">Print</a>
+            </td>
+        </tr>
+            {% endfor %}
+        {% else %}
+        <tr class="height-50">
+            <td colspan="5" class="bordered-thick text-center">No record found.</td>
+        </tr>
+        {% endif %}
+    </table>
+
+{% endblock %}

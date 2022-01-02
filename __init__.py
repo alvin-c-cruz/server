@@ -43,6 +43,7 @@ def create_app(test_mode=False):
 		blueprints.cr,
 		blueprints.cd,
 		blueprints.ap,
+		blueprints.gj,
 
 		blueprints.x_home_page,
 		blueprints.x_cd,

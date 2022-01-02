@@ -24,7 +24,8 @@ def Home():
 							'cr_prepared', 'cr_checked', 'cr_audited', 'cr_approved',
 							'sales_prepared', 'sales_checked', 'sales_audited', 'sales_approved',
 							'cd_prepared', 'cd_checked', 'cd_audited', 'cd_approved',
-							'ap_prepared', 'ap_checked', 'ap_audited', 'ap_approved'
+							'ap_prepared', 'ap_checked', 'ap_audited', 'ap_approved',
+							'gj_prepared', 'gj_checked', 'gj_audited', 'gj_approved',
 							):
 				opt.get(keyword=keyword)
 				opt.value = form[keyword]
@@ -53,6 +54,11 @@ def Home():
 			g.ap_audited = form['ap_audited']
 			g.ap_approved = form['ap_approved']
 
+			g.gj_prepared = form['gj_prepared']
+			g.gj_checked = form['gj_checked']
+			g.gj_audited = form['gj_audited']
+			g.gj_approved = form['gj_approved']
+
 	else:
 		form = {}
 
@@ -66,6 +72,7 @@ def Home():
 						'sales_prepared', 'sales_checked', 'sales_audited', 'sales_approved',
 						'cd_prepared', 'cd_checked', 'cd_audited', 'cd_approved',
 						'ap_prepared', 'ap_checked', 'ap_audited', 'ap_approved',
+						'gj_prepared', 'gj_checked', 'gj_audited', 'gj_approved',
 						):
 			opt.get(keyword=keyword)
 			value = opt.value

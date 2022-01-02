@@ -11,6 +11,7 @@ from . import sales
 from . import cr
 from . import cd
 from . import ap
+from . import gj
 
 from . import x_home_page
 from . import x_cd

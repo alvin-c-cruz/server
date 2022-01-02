@@ -181,6 +181,32 @@ def load_options():
 		session['ap_approved'] = opt.value
 		g.ap_approved = opt.value
 
+#  GJ Signatories
+	if g.get('gj_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='gj_prepared')
+		session['gj_prepared'] = opt.value
+		g.gj_prepared = opt.value
+
+	if g.get('gj_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='gj_checked')
+		session['gj_checked'] = opt.value
+		g.gj_checked = opt.value
+
+	if g.get('gj_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='gj_audited')
+		session['gj_audited'] = opt.value
+		g.gj_audited = opt.value
+
+	if g.get('gj_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='gj_approved')
+		session['gj_approved'] = opt.value
+		g.gj_approved = opt.value
+
+
 
 	
 def login_required(view):

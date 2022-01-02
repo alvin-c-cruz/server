@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title>General Journal</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/main.css')}}">
+    <style type="text/css">
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 12px;
+        }
+
+        th, td {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <p><strong>{{g.company_name.upper()}}</strong></p>   
+        <p>General Journal</p> 
+        <p>From {{date_from}} to {{date_to}}</p>
+    </header>
+    <main>
+        <table border="1">
+            <thead>
+                <tr>
+                {% for key in gjs.keys() %}
+                    <th>
+                        {{key}}
+                    </th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, row in gjs.iterrows() %}
+                <tr>
+                    {% if gjs|length != key + 1 %}
+                        {% for x in row %}
+                            {% if x is number %} 
+                    <td style="text-align: center">
+                        {{ "{:,.2f}".format(x|float) }}
+                    </td>
+                            {% else %}
+                    <td style="text-align: center">
+                        {{x}}
+                    </td>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for x in row %}
+                            {% if x is number %} 
+                    <td style="text-align: center">
+                        <strong>{{ "{:,.2f}".format(x|float) }}</strong>
+                    </td>
+                            {% else %}
+                    <td style="text-align: center">
+                        {{x}}
+                    </td>
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

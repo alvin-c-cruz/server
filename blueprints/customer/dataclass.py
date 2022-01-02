@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from sqlite_data_model import sqliteDataModel
 
 @dataclass
-class Vendor(sqliteDataModel):
+class Customer(sqliteDataModel):
 	name: str = None
 	tin: str = None
 	address: str = None
@@ -15,7 +15,7 @@ class Vendor(sqliteDataModel):
 
 
 	def is_related(self):
-		for voucher in ('cd', 'ap', 'x_cd'):	
-			if self.db.execute('SELECT COUNT(*) FROM tbl_{vendor} WHERE vendor_id = ?;', (self.id, )).fetchone()[0]:
-				return True
+		# for voucher in ('sj',):	
+		# 	if self.db.execute(f'SELECT COUNT(*) FROM tbl_{voucher} WHERE customer_id = ?;', (self.id, )).fetchone()[0]:
+		# 		return True
 		return False

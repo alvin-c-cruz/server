@@ -36,13 +36,16 @@ def init_db():
 	from ..options import Options
 	from ..account import Account
 	from ..vendor import Vendor
+	from ..customer import Customer
+
+
 	from ..cd import CD
 	from ..ap import AP
 
 	from ..x_cd import X_CD
 
 	# This structure uses sqlite_data_model
-	models = [User, Options, Account, Vendor,]
+	models = [User, Options, Account, Vendor, Customer]
 	for model in models:
 		try:
 			model(db=db).init_db
@@ -114,6 +117,21 @@ def defaults(db, company):
 			address=row["address"]
 		)
 		vendor.save
+
+
+	#  Customers
+	from ..customer import Customer
+	customers = pd.read_csv(os.path.join(current_app.instance_path, 'db_default', company, 'customers.csv'))
+	customers.fillna("", inplace=True)
+
+	for i, row in customers.iterrows():
+		customer = Customer(
+			db=db,
+			name=row["name"],
+			tin=row["tin"],
+			address=row["address"]
+		)
+		customer.save
 
 
 @click.command('init-db')

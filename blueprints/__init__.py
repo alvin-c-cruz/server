@@ -4,6 +4,7 @@ from . import DB
 
 from . import account
 from . import vendor
+from . import customer
 
 from . import home_page
 from . import cd

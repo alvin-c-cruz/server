@@ -13,7 +13,7 @@ class Account(sqliteDataModel):
         
 
     def is_related(self):
-    	for voucher in ('cd',):
-    		if self.db.execute('SELECT COUNT(*) FROM tbl_cd_entry WHERE account_id = ?;', (self.id, )).fetchone()[0]:
+    	for voucher in ('cd', 'ap', 'x_cd'):
+    		if self.db.execute('SELECT COUNT(*) FROM tbl_{voucher}_entry WHERE account_id = ?;', (self.id, )).fetchone()[0]:
     			return True
     	return False

@@ -36,6 +36,7 @@ def create_app(test_mode=False):
 
 		blueprints.account,
 		blueprints.vendor,
+		blueprints.customer,
 
 		blueprints.home_page,
 		blueprints.cd,

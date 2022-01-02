@@ -13,16 +13,16 @@ from .. DB import get_db
 from ... packages import Voucher
 
 @dataclass
-class AP(Voucher):
-    ap_num: str = ""
+class Sales(Voucher):
+    sales_num: str = ""
     record_date: str = str(datetime.now(timezone(timedelta(hours=8))))[:10]
-    vendor_id: int = 0
+    customer_id: int = 0
     invoice_number: str = ""
     description: str = ""
 
     @property
-    def vendor_name(self):
-    	return self.db.execute('SELECT name FROM tbl_vendor WHERE id=?', (self.vendor_id, )).fetchone()[0]
+    def customer_name(self):
+    	return self.db.execute('SELECT name FROM tbl_customer WHERE id=?', (self.customer_id, )).fetchone()[0]
 
 
     def all(self, **filter):
@@ -30,28 +30,28 @@ class AP(Voucher):
     		clause = [f'{key}=?' for key in filter]
     		sql = f"""
     			SELECT
-    				tbl_ap.id,
-                    tbl_ap.ap_num,
-    				tbl_ap.record_date,
-    				tbl_vendor.name as vendor_name,
-                    tbl_ap.invoice_number,
-    				tbl_ap.description
-    			FROM tbl_ap
-    			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_ap.vendor_id
+    				tbl_sales.id,
+                    tbl_sales.sales_num,
+    				tbl_sales.record_date,
+    				tbl_customer.name as customer_name,
+                    tbl_sales.invoice_number,
+    				tbl_sales.description
+    			FROM tbl_sales
+    			INNER JOIN tbl_customer ON tbl_customer.id = tbl_sales.customer_id
     			WHERE {", ".join(clause)}
     		"""
     		return self.db.execute(sql, tuple(filter.values)).fetchall()
     	else:
     		sql = f"""
     			SELECT
-    				tbl_ap.id,
-    				tbl_ap.ap_num,
-                    tbl_ap.record_date,
-                    tbl_ap.invoice_number,
-    				tbl_vendor.name as vendor_name,
-    				tbl_ap.description
-    			FROM tbl_ap
-    			INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_ap.vendor_id
+    				tbl_sales.id,
+    				tbl_sales.sales_num,
+                    tbl_sales.record_date,
+                    tbl_sales.invoice_number,
+    				tbl_customer.name as customer_name,
+    				tbl_sales.description
+    			FROM tbl_sales
+    			INNER JOIN tbl_customer ON tbl_customer.id = tbl_sales.customer_id
     		"""
     		return self.db.execute(sql).fetchall()
 
@@ -60,39 +60,39 @@ class AP(Voucher):
         if True:
             sql = f"""
                 SELECT
-                    tbl_ap.id,
-                    tbl_ap.ap_num,
-                    tbl_ap.record_date,
-                    tbl_vendor.name as vendor_name,
-                    tbl_ap.invoice_number,
-                    tbl_ap.description
-                FROM tbl_ap
-                INNER JOIN tbl_vendor ON tbl_vendor.id = tbl_ap.vendor_id
-                WHERE tbl_ap.record_date>=? AND tbl_ap.record_date<=?
+                    tbl_sales.id,
+                    tbl_sales.sales_num,
+                    tbl_sales.record_date,
+                    tbl_customer.name as customer_name,
+                    tbl_sales.invoice_number,
+                    tbl_sales.description
+                FROM tbl_sales
+                INNER JOIN tbl_customer ON tbl_customer.id = tbl_sales.customer_id
+                WHERE tbl_sales.record_date>=? AND tbl_sales.record_date<=?
             """
             return self.db.execute(sql, (date_from, date_to)).fetchall()
 
 
     def is_validated(self):
         if self.id:
-            if self.db.execute('SELECT COUNT(*) FROM tbl_ap WHERE ap_num=? AND id!=?;', (self.ap_num, self.id)).fetchone()[0]:
-                flash("AP Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE sales_num=? AND id!=?;', (self.sales_num, self.id)).fetchone()[0]:
+                flash("Sales Number is already in use.")
                 return False
-            if self.db.execute('SELECT COUNT(*) FROM tbl_ap WHERE invoice_number=? AND id!=?;', (self.invoice_number, self.id)).fetchone()[0]:
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE invoice_number=? AND id!=?;', (self.invoice_number, self.id)).fetchone()[0]:
                 flash("Invoice Number is already in use.")
                 return False
         else:
-            if self.db.execute('SELECT COUNT(*) FROM tbl_ap WHERE ap_num=?;', (self.ap_num, )).fetchone()[0]:
-                flash("AP Number is already in use.")
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE sales_num=?;', (self.sales_num, )).fetchone()[0]:
+                flash("Sales Number is already in use.")
                 return False
-            if self.db.execute('SELECT COUNT(*) FROM tbl_ap WHERE invoice_number=?;', (self.invoice_number, )).fetchone()[0]:
+            if self.db.execute('SELECT COUNT(*) FROM tbl_sales WHERE invoice_number=?;', (self.invoice_number, )).fetchone()[0]:
                 flash("Invoice Number is already in use.")
                 return False
 
         return True
 
 
-def get_ap(date_from, date_to):
+def get_sales(date_from, date_to):
     def short_date(_date):
         if type(_date) == str:
             _date = date(int(_date[:4]), int(_date[5:7]), int(_date[-2:]))
@@ -104,24 +104,24 @@ def get_ap(date_from, date_to):
 
     #  Create initial dataframe
     sql = f"""SELECT
-                ap.id as id,
-                ap.record_date as DATE,
-                ap.ap_num AS "AP No.",
-                v.name as NAME,
-                ap.invoice_number as "INVOICE No.",
-                ap.description as DESCRIPTION
+                s.id as id,
+                s.record_date as DATE,
+                s.sales_num AS "SV No.",
+                c.name as NAME,
+                s.invoice_number as "INVOICE No.",
+                s.description as DESCRIPTION
 
-            FROM tbl_ap as ap
+            FROM tbl_sales as s
 
-            INNER JOIN tbl_vendor as v ON ap.vendor_id = v.id
+            INNER JOIN tbl_customer as c ON s.customer_id = c.id
 
-            WHERE ap.record_date>="{date_from}" AND ap.record_date<="{date_to}"
+            WHERE s.record_date>="{date_from}" AND s.record_date<="{date_to}"
         ;
         """
-    df_ap = pd.read_sql_query(sql, db)
-    df_ap = df_ap.set_index('id')
+    df_sales = pd.read_sql_query(sql, db)
+    df_sales = df_sales.set_index('id')
 
-    for key, row in df_ap.iterrows():
+    for key, row in df_sales.iterrows():
         row.DATE = short_date(row.DATE)
 
 
@@ -129,12 +129,12 @@ def get_ap(date_from, date_to):
     sql = f"""SELECT
                 acct.name as account_title
 
-            FROM tbl_ap_entry as entry
+            FROM tbl_sales_entry as entry
 
-            INNER JOIN tbl_ap as ap ON entry.ap_id = ap.id
+            INNER JOIN tbl_sales as s ON entry.sales_id = s.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
-            WHERE ap.record_date>="{date_from}" AND ap.record_date<="{date_to}"
+            WHERE s.record_date>="{date_from}" AND s.record_date<="{date_to}"
 
             GROUP BY acct.name
 
@@ -147,20 +147,20 @@ def get_ap(date_from, date_to):
         account_title = row.account_title
         list_accounts.append(account_title.upper())
 
-    for col_name in list_accounts: df_ap[col_name] = ""
+    for col_name in list_accounts: df_sales[col_name] = ""
 
     #  Gather entries and record to proper row and column
     sql = f"""SELECT
-                ap.id,
+                s.id,
                 acct.name as account_title,
                 (entry.debit-entry.credit) as amount
 
-            FROM tbl_ap_entry as entry
+            FROM tbl_sales_entry as entry
 
-            INNER JOIN tbl_ap as ap ON entry.ap_id = ap.id
+            INNER JOIN tbl_sales as s ON entry.sales_id = s.id
             INNER JOIN tbl_account as acct on acct.id = entry.account_id
 
-            WHERE ap.record_date>="{date_from}" AND ap.record_date<="{date_to}"
+            WHERE s.record_date>="{date_from}" AND s.record_date<="{date_to}"
         ;
         """
     df_entry = pd.read_sql_query(sql, db)
@@ -168,9 +168,9 @@ def get_ap(date_from, date_to):
 
     for key, row in df_entry.iterrows():
         account_title, amount = row
-        df_ap.loc[key][account_title.upper()] = amount
+        df_sales.loc[key][account_title.upper()] = amount
 
-    return df_ap
+    return df_sales
 
 
 @dataclass
@@ -192,10 +192,10 @@ class Create_File:
         )
 
         #  Downloaded filename
-        self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Account Payable Journal.xlsx")
+        self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} Sales Journal.xlsx")
 
 
-        self.df_ap = get_ap(self.date_from, self.date_to)
+        self.df_sales = get_sales(self.date_from, self.date_to)
 
         self.create()
 
@@ -210,7 +210,7 @@ class Create_File:
 
 
     def sheet_transactions(self, wb):
-        sheet_name = "APJ"
+        sheet_name = "SJ"
         wb["Sheet"].title = sheet_name
         ws = wb[sheet_name]
 
@@ -222,7 +222,7 @@ class Create_File:
 
         row_num += 1
         cell = ws[f'A{row_num}']
-        cell.value = "Accounts Payable Journal"
+        cell.value = "Sales Journal"
         cell.font = Font(size=12, bold=True)
 
         row_num += 1
@@ -232,7 +232,7 @@ class Create_File:
 
         #  Headers
         row_num += 2
-        column_names = list(self.df_ap.columns)
+        column_names = list(self.df_sales.columns)
 
         width = {
             "A": 11.11,
@@ -260,7 +260,7 @@ class Create_File:
         row_num += 1
         start_row = row_num
         amount_columns = []
-        for key, cd in self.df_ap.iterrows():
+        for key, cd in self.df_sales.iterrows():
             col_num = 1
 
             for x in cd:

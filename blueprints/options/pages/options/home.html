@@ -13,6 +13,22 @@
     		</fieldset>
 
 	    	<fieldset class="bordered">
+	    		<legend>Signatories for Cash Receipts Voucher</legend>
+		    	{{ line_entry("cr_prepared", "Prepared by: ", form.cr_prepared) }}		
+		    	{{ line_entry("cr_checked", "Check by: ", form.cr_checked) }}		
+		    	{{ line_entry("cr_audited", "Audited by: ", form.cr_audited) }}		
+		    	{{ line_entry("cr_approved", "Approved by: ", form.cr_approved) }}		
+	    	</fieldset>
+
+	    	<fieldset class="bordered">
+	    		<legend>Signatories for Sales Voucher</legend>
+		    	{{ line_entry("sales_prepared", "Prepared by: ", form.sales_prepared) }}		
+		    	{{ line_entry("sales_checked", "Check by: ", form.sales_checked) }}		
+		    	{{ line_entry("sales_audited", "Audited by: ", form.sales_audited) }}		
+		    	{{ line_entry("sales_approved", "Approved by: ", form.sales_approved) }}		
+	    	</fieldset>
+
+	    	<fieldset class="bordered">
 	    		<legend>Signatories for Cash Disbursement</legend>
 		    	{{ line_entry("cd_prepared", "Prepared by: ", form.cd_prepared) }}		
 		    	{{ line_entry("cd_checked", "Check by: ", form.cd_checked) }}		

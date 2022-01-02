@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex">
+        <h1>Cash Receipts</h1>
+        <a href="{{url_for('cr.Add')}}" class="button align-right">New Receipt</a>
+    </div>
+
+    <form method="post" action="{{url_for('cr.Home')}}">
+        {{csrf_token}}
+        <div class="flex gap-20">
+            <label class="flex align-items-center">From</label>
+            <input type="date" name="date_from" value="{{date_from}}">
+            <label class="flex align-items-center">To</label>
+            <input type="date" name="date_to" value="{{date_to}}">
+            <input type="submit" value="Refresh" class="button">
+            <a href="{{url_for('cr.Download', date_from=date_from, date_to=date_to)}}" class="button">Download</a>
+            <a href="{{url_for('cr.View', date_from=date_from, date_to=date_to)}}" target="_blank" class="button">View</a>
+        </div>        
+    </form>
+
+    <table class="bordered-thick">
+        <tr class="height-50">
+            <th class="bordered-thick">
+                Date
+            </th> 
+            <th class="bordered-thick">
+                CR No.
+            </th> 
+            <th class="bordered-thick">
+                Customer
+            </th>
+            <th class="bordered-thick">
+                OR No.
+            </th>
+            <th class="bordered-thick">
+                Actions
+            </th>
+        </tr>
+
+        {% if crs %}
+            {% for cr in crs %}
+        <tr class="height-50">
+            <td class="bordered-thick">
+                {{cr['record_date']}}
+            </td> 
+            <td class="bordered-thick">
+                {{cr['cr_num']}}
+            </td> 
+            <td class="bordered-thick">
+                {{cr['customer_name']}}
+            </td>
+            <td class="bordered-thick">
+                {{cr['or_number']}}
+            </td>
+            <td class="bordered-thick">
+                <a href="{{url_for('cr.Edit', cr_id=cr['id'])}}" class="button">Edit</a>
+                <a href="{{url_for('cr.Delete', cr_id=cr['id'])}}" class="button" onclick="return confirm('Are you sure you want to delete this item')">Delete</a>
+                <a href="{{url_for('cr.Print', cr_id=cr['id'])}}" class="button" target="_blank">Print</a>
+            </td>
+        </tr>
+            {% endfor %}
+        {% else %}
+        <tr class="height-50">
+            <td colspan="5" class="bordered-thick text-center">No record found.</td>
+        </tr>
+        {% endif %}
+    </table>
+
+{% endblock %}

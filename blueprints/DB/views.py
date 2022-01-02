@@ -39,6 +39,8 @@ def init_db():
 	from ..customer import Customer
 
 
+	from ..sales import Sales
+	from ..cr import CR
 	from ..cd import CD
 	from ..ap import AP
 
@@ -53,6 +55,8 @@ def init_db():
 			pass
 	
 	# TODO: Codes below should be refactored to use sqlite_data_model
+	Sales(db=db).init_db
+	CR(db=db).init_db
 	CD(db=db).init_db
 	AP(db=db).init_db
 

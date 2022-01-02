@@ -1,0 +1,124 @@
+<html>
+<head>
+    <title>Print Preview: SV No. {{sales.sales_num}}</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sales.css')}}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="flex-row justify-center">
+            <h3>{{g.company_name.upper()}}</h3>
+        </div>
+
+        <div class="flex-row justify-center">
+            <div class="flex-1"></div>
+            <div class="flex-row flex-1 justify-center">
+                <h4><u class="font-size-32">SALES VOUCHER</u></h4>
+            </div>
+            <div class="flex-row flex-1 justify-center">
+                <div class="flex-row justify-center align-center">
+                    <label>No.</label>
+                    <span><strong class="font-red font-size-20">{{sales.sales_num}}</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row justify-center">
+            <div class="flex-row flex-3">
+                <div class="flex-row flex-1 align-center">
+                    <label>SOLD TO: </label>
+                </div>
+                <div class="flex-row flex-3 align-center border-bottom">
+                    <span class="flex-shrink">{{sales.customer_name}}</span>
+                </div>
+            </div>
+            <div class="flex-row flex-2">
+                <div class="flex-row flex-1 justify-end">
+                    <label>DATE: </label>
+                </div>
+                <div class="flex-row flex-2 justify-center border-bottom">
+                    <span>{{sales.record_date}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row">
+            <div class="flex-row flex-3">
+                <div class="flex-row flex-1 align-center">
+
+                </div>
+                <div class="flex-row flex-3 align-center border-bottom">
+                    
+                </div>
+            </div>
+            <div class="flex-row flex-2">
+                <div class="flex-row flex-1 justify-end">
+                    <label>INVOICE NO.: </label>
+                </div>
+                <div class="flex-row flex-2 justify-center border-bottom">
+                    <span>{{sales.invoice_number}}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex-column justify-center bordered margin-top-10">
+        <div class="flex-row justify-center">
+            <label class="flex-row flex-4 justify-center height-15 line-bordered border-bottom"><strong>ACCOUNT TITLE</strong></label>
+            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>DEBIT</strong></label>
+            <label class="flex-row flex-1 justify-center height-15 line-bordered border-bottom"><strong>CREDIT</strong></label>
+        </div>
+
+        {% for entry in sales.entry %}
+        <div class="flex-row justify-center">
+            {% if entry.debit %}
+            <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-10">{{entry.account_title}}</span></label>
+            {% else %}
+            <label class="flex-row flex-4 justify-start height-15 line-bordered"><span class="margin-left-50">{{entry.account_title}}</span></label>
+            {% endif %}
+            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.debit %}{{entry.debit}}{% endif %}</span></label>
+            <label class="flex-row flex-1 justify-end height-15 line-bordered"><span class="margin-right-10">{% if entry.credit %}{{entry.credit}}{% endif %}</span></label>
+        </div>
+        {% endfor %}
+    </main>
+
+    <footer class="flex-column">
+        <div class="flex-column line-bordered border-bottom height-100">
+            <span class="margin-left-10">P A R T I C U L A R S:</span>
+            <span class="margin-left-50 margin-right-10">{{sales.description}}</span>
+        </div>
+        <div class="flex-column">
+            <div class="flex-row justify-center">
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Prepared by:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.sales_prepared}}</span>
+                </div>
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Audited by:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.sales_audited}}</span>
+                </div>
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Received by:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end"></span>
+                </div>
+            </div>
+        </div>
+        <div class="flex-column">
+            <div class="flex-row justify-center">
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Checked by:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.sales_checked}}</span>
+                </div>
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Approved by:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end">{{g.sales_salesproved}}</span>
+                </div>
+                <div class="flex-row flex-1 height-50">
+                    <label class="flex-row flex-2 align-end">Date:</label>
+                    <span class="flex-row flex-3 justify-center border-bottom align-end"></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

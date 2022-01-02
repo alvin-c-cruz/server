@@ -21,6 +21,8 @@ def Home():
 			opt = Options(db=get_db())
 			for keyword in (
 							'company_name', 
+							'cr_prepared', 'cr_checked', 'cr_audited', 'cr_approved',
+							'sales_prepared', 'sales_checked', 'sales_audited', 'sales_approved',
 							'cd_prepared', 'cd_checked', 'cd_audited', 'cd_approved',
 							'ap_prepared', 'ap_checked', 'ap_audited', 'ap_approved'
 							):
@@ -30,6 +32,16 @@ def Home():
 				session[keyword] = form[keyword]
 
 			g.company_name = company_name
+
+			g.cr_prepared = form['cr_prepared']
+			g.cr_checked = form['cr_checked']
+			g.cr_audited = form['cr_audited']
+			g.cr_approved = form['cr_approved']
+
+			g.sales_prepared = form['sales_prepared']
+			g.sales_checked = form['sales_checked']
+			g.sales_audited = form['sales_audited']
+			g.sales_approved = form['sales_approved']
 
 			g.cd_prepared = form['cd_prepared']
 			g.cd_checked = form['cd_checked']
@@ -50,6 +62,8 @@ def Home():
 		form['company_name'] = "" if company_name == "Company Name" else company_name
 
 		for keyword in (
+						'cr_prepared', 'cr_checked', 'cr_audited', 'cr_approved',
+						'sales_prepared', 'sales_checked', 'sales_audited', 'sales_approved',
 						'cd_prepared', 'cd_checked', 'cd_audited', 'cd_approved',
 						'ap_prepared', 'ap_checked', 'ap_audited', 'ap_approved',
 						):

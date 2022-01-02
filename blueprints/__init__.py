@@ -7,6 +7,8 @@ from . import vendor
 from . import customer
 
 from . import home_page
+from . import sales
+from . import cr
 from . import cd
 from . import ap
 

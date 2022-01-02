@@ -79,6 +79,58 @@ def load_options():
 	else:
 		g.company_name = company_name
 	
+	#  Sales Signatories
+	if g.get('sales_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_prepared')
+		session['sales_prepared'] = opt.value
+		g.sales_prepared = opt.value
+
+	if g.get('sales_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_checked')
+		session['sales_checked'] = opt.value
+		g.sales_checked = opt.value
+
+	if g.get('sales_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_audited')
+		session['sales_audited'] = opt.value
+		g.sales_audited = opt.value
+
+	if g.get('sales_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='sales_approved')
+		session['sales_approved'] = opt.value
+		g.sales_approved = opt.value
+
+
+	#  CR signatories
+	if g.get('cr_prepared') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cr_prepared')
+		session['cr_prepared'] = opt.value
+		g.cr_prepared = opt.value
+
+	if g.get('cr_checked') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cr_checked')
+		session['cr_checked'] = opt.value
+		g.cr_checked = opt.value
+
+	if g.get('cr_audited') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cr_audited')
+		session['cr_audited'] = opt.value
+		g.cr_audited = opt.value
+
+	if g.get('cr_approved') is None:
+		opt = Options(db=get_db())
+		opt.get(keyword='cr_approved')
+		session['cr_approved'] = opt.value
+		g.cr_approved = opt.value
+
+
 	#  CD signatories
 	if g.get('cd_prepared') is None:
 		opt = Options(db=get_db())

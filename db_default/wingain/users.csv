@@ -1,0 +1,3 @@
+username,email,password,level
+alvin,alvinccruz12@gmail.com,pbkdf2:sha256:260000$m9hok4g9tJLeQpdK$388a29d922597c53a86749f3800d93a654f823772e86fe6e7d4d771ae35ea8b6,1
+maris,marisvalencia0115@yahoo.com.ph,pbkdf2:sha256:260000$S7N4NmQcLhjsv3KJ$3efa095533d6a117a6c4777d19a55f4a146d2a425c67fb2205ff695de66d71fe,3

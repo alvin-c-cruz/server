@@ -8,7 +8,7 @@ from .. DB import get_db
 from .. vendor import Vendor
 from .. account import Account
 
-from .dataclass import GJ, Create_File, get_gj
+from .dataclass import GJ, CreateFile, get_gj
 
 MAX_ROW = 10
 
@@ -171,7 +171,7 @@ def Print(gj_id):
 @bp.route('/download?<date_from>&<date_to>')
 @login_required
 def Download(date_from, date_to):
-	f = Create_File(date_from=date_from, date_to=date_to)
+	f = CreateFile(date_from=date_from, date_to=date_to)
 
 	return send_file('{}'.format(f.filename), as_attachment=True, cache_timeout=0)
 

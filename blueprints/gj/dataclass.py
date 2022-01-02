@@ -1,4 +1,4 @@
-from flask import flash, current_app, session, g
+from flask import flash, current_app, session
 from datetime import date, datetime, timezone, timedelta
 from dataclasses import dataclass
 import os
@@ -42,7 +42,6 @@ class GJ(Voucher):
                 """
             return self.db.execute(sql).fetchall()
 
-
     def range(self, date_from, date_to):
         if True:
             sql = f"""
@@ -55,7 +54,6 @@ class GJ(Voucher):
                 WHERE tbl_gj.record_date>=? AND tbl_gj.record_date<=?
             """
             return self.db.execute(sql, (date_from, date_to)).fetchall()
-
 
     def is_validated(self):
         if self.id:
@@ -97,7 +95,6 @@ def get_gj(date_from, date_to):
 
     for key, row in df_gj.iterrows():
         row.DATE = short_date(row.DATE)
-
 
     #  Collect account titles and add to main dataframe
     sql = f"""SELECT
@@ -148,7 +145,7 @@ def get_gj(date_from, date_to):
 
 
 @dataclass
-class Create_File:
+class CreateFile:
     date_from: str
     date_to: str
 
@@ -168,11 +165,9 @@ class Create_File:
         #  Downloaded filename
         self.filename = os.path.join(current_app.instance_path, "downloads", f"{self.date_from} to {self.date_to} General Journal.xlsx")
 
-
         self.df_gj = get_gj(self.date_from, self.date_to)
 
         self.create()
-
 
     def create(self):
         wb = Workbook()
@@ -181,7 +176,6 @@ class Create_File:
 
         wb.save(self.filename)
         wb.close()
-
 
     def sheet_transactions(self, wb):
         sheet_name = "GJ"
@@ -212,10 +206,9 @@ class Create_File:
             "A": 11.11,
             "B": 9.11,
             "C": 30.0,
-            "D": 9.11,
-            "E": 30.0,
+            # "D": 9.11,
+            # "E": 30.0,
         }
-
 
         col_num = 1
         for col_name in column_names:
@@ -227,8 +220,6 @@ class Create_File:
             cell.border = self.thin_border
             cell.alignment = Alignment(horizontal='center') if col_num < 6 else Alignment(horizontal='center', wrap_text=True)
             col_num += 1
-
-
 
         #  Details
         row_num += 1
@@ -242,10 +233,12 @@ class Create_File:
                 cell = ws[f'{col_letter}{row_num}']
                 cell.value = x
                 cell.border = self.thin_border
-                if col_letter in ("A", "B", "D"): cell.alignment = Alignment(horizontal='center')
-                if col_letter in ("B", "D"): cell.number_format = "@"
+                if col_letter in ("A", "B"):
+                    cell.alignment = Alignment(horizontal='center')
+                if col_letter in ("B",):
+                    cell.number_format = "@"
 
-                if col_num not in (1, 2, 3, 4, 5):
+                if col_num not in (1, 2, 3):
                     amount_columns.append(col_letter)
                     cell.number_format = "#,##0.00_);(#,##0.00)"
                 col_num += 1
@@ -259,7 +252,7 @@ class Create_File:
         cell = ws[f'A{row_num}']
         cell.value = "TOTAL"
 
-        for col in ("A", "B", "C", "D", "E"):
+        for col in ("A", "B", "C"):
             cell = ws[f'{col}{row_num}']
             cell.font = Font(bold=True)
             cell.border = self.double_rule
@@ -268,7 +261,7 @@ class Create_File:
             cell = ws[f'{col}{row_num}']
             cell.value = f'=SUM({col}{start_row}:{col}{end_row})'
             cell.font = Font(bold=True)
-            cell.number_format ="#,##0.00_);(#,##0.00)"
+            cell.number_format = "#,##0.00_);(#,##0.00)"
             cell.border = self.double_rule
         
     def long_date(self, _date):
